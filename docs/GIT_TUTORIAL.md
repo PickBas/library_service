@@ -35,6 +35,7 @@
 #### 4. Переходим в репозиторий, в нашем случае он называется *"test"*. Видим, что он пуст
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/4.png)
 #### 5. Открываем в нем терминал (см. пункт 2). Проверим его статус командой git status. На данный момент сохранять нечего
+![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/5.png)
 
 ### Создание версии
 * Создадим файл для демонстрации
@@ -44,11 +45,10 @@
 * Скажем Git отослать новую версию на удаленное хранилище, в нашем случае - **GitHub**
 
 #### 1. Создаем файл, сохраняем
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/5.png)
-#### 2. Проверяем, увидел ли Git наличие нового файла в репе
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/6.png)
-#### 3. Говорим Git проследить за этим файлом командой "git add ." (. - текущая дериктория)
+#### 2. Проверяем, увидел ли Git наличие нового файла в репе
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/7.png)
+#### 3. Говорим Git проследить за этим файлом командой "git add ." (. - текущая дериктория)
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/8.png)
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/9.png)
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/10.png)
