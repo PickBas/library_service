@@ -14,12 +14,10 @@ class IndexPageView(View):
 
     def get(self, request: HttpRequest) -> render:
         """
-        Processing get request.
+        Processing get request
 
-        Args:
-            request: HttpRequest
-
-        Returns:
-            render
+        :param request: HttpRequest
+        :return: render
         """
+
         return render(request, self.template_name, self.context)
