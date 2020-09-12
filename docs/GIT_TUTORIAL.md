@@ -50,6 +50,8 @@
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/7.png)
 #### 3. Говорим Git проследить за этим файлом командой "git add ." (. - текущая дериктория)
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/8.png)
+#### 4. Говорим Git создать верисю, которую мы будем называть "*The first version!*"
+![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/commit.png)
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/9.png)
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/10.png)
 ![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/11.png)
