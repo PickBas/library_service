@@ -136,3 +136,6 @@ dmypy.json
 
 # secret
 .secret.txt
+
+# migrations
+*/migrations/00*.py
