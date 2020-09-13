@@ -8,6 +8,7 @@ class IndexViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.response = self.client.get('/')
+        super(IndexViewTestCase, self).setUp()
 
     def test_page(self):
         """Testing if page loads"""
