@@ -1,0 +1,78 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$pRc5wVJWvywO$8mw4gYhJsgnUB6c51t9xa+gt7u+VnPF/Z1AbAczMkRk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "FirstUserTestStudent",
+    "first_name": "",
+    "last_name": "",
+    "email": "FirstUserTest@firstusertest.firstusertest",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2020-09-13T12:37:22.603Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$8ftdRY8AvC4N$gXOxB6kL9yySM4mmZ9ighjCb15WTSf8TH/UUkHdSjUs=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "SecondUserTestLibrarian",
+    "first_name": "",
+    "last_name": "",
+    "email": "SecondUserTest@secondusertest.secondusertest",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2020-09-13T12:37:22.771Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sites.site",
+  "pk": 1,
+  "fields": {
+    "domain": "example.com",
+    "name": "example.com"
+  }
+},
+{
+  "model": "user_profile.profile",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "is_librarian": true,
+    "is_student": false,
+    "is_sys_admin": false,
+    "base_image": "avatars/0.jpg",
+    "image": "avatars/0.jpg",
+    "birth": null,
+    "show_email": false,
+    "given_books_all_times": [],
+    "books_in_use": []
+  }
+},
+{
+  "model": "user_profile.profile",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "is_librarian": false,
+    "is_student": true,
+    "is_sys_admin": false,
+    "base_image": "avatars/0.jpg",
+    "image": "avatars/0.jpg",
+    "birth": null,
+    "show_email": false,
+    "given_books_all_times": [],
+    "books_in_use": []
+  }
+}
+]
