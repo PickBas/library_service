@@ -5,23 +5,6 @@ from django.db import models
 from django.dispatch import receiver
 
 
-class Role(models.Model):
-    """Role class"""
-    STUDENT = 1
-    LIBRARIAN = 2
-    SUPERVISOR = 3
-    ROLE_CHOICES = (
-        (STUDENT, 'student'),
-        (LIBRARIAN, 'teacher'),
-        (SUPERVISOR, 'supervisor'),
-    )
-
-    id = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, primary_key=True)
-
-    def __str__(self):
-        return self.get_id_display()
-
-
 class Profile(models.Model):
     """Profile class"""
 
@@ -35,14 +18,15 @@ class Profile(models.Model):
                                 on_delete=models.CASCADE,
                                 primary_key=True,
                                 related_name='user')
+    is_librarian = models.BooleanField(default=False)
+    is_student = models.BooleanField(default=False)
+    is_sys_admin = models.BooleanField(default=False)
 
     base_image = models.ImageField(upload_to='avatars/', default='avatars/0.png')
     image = models.ImageField(upload_to='avatars/', default='avatars/0.png')
 
     birth = models.DateField(null=True)
     show_email = models.BooleanField(default=False)
-
-    roles = models.ManyToManyField(Role)
 
 
 @receiver(user_signed_up)
