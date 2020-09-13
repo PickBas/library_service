@@ -7,7 +7,7 @@ from django.utils import timezone
 class Book(models.Model):
     """Book class"""
     name = models.CharField(max_length=100, blank=True, null=True)
-    #TODO: file
+    file = models.FileField(upload_to='books')
     in_use_by = models.OneToOneField(to=User,
                                      on_delete=models.CASCADE,
                                      related_name='current_book_user')

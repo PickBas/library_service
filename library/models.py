@@ -57,7 +57,3 @@ class Library(models.Model):
         book.since_given = None
         book.since_back = timezone.now
         book.save()
-
-
-
-
