@@ -1,5 +1,6 @@
 """user_profile models.py"""
-from django.contrib.auth.models import AbstractUser
+from allauth.account.signals import user_signed_up
+from django.contrib.auth.models import User
 from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
@@ -22,31 +23,14 @@ class Role(models.Model):
         return self.get_id_display()
 
 
-class User(AbstractUser):
-    """User class"""
-    is_student = models.BooleanField(default=False)
-    is_librarian = models.BooleanField(default=False)
-    is_supervisor = models.BooleanField(default=False)
-    roles = models.ManyToManyField(Role)
-
-
 class Profile(models.Model):
     """Profile class"""
 
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, primary_key=True, related_name='user')
 
-# @receiver(user_signed_up)
-# def create_user_profile(**kwargs) -> None:
-#     """Creating user profile after registration"""
-#     profile = Profile(user=kwargs['user'])
-#
-#     if Profile.objects.filter(custom_url=kwargs['user'].username).exists():
-#         profile.custom_url =\
-#             kwargs['user'].username + \
-#             str(len(Profile.objects.filter(
-#                 custom_url=kwargs['user'].username)) + 1)
-#
-#     else:
-#         profile.custom_url = kwargs['user'].username
-#
-#     profile.save()
+
+@receiver(user_signed_up)
+def create_user_profile(**kwargs) -> None:
+    """Creating user profile after registration"""
+    profile = Profile(user=kwargs['user'])
+    profile.save()
