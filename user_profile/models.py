@@ -16,16 +16,13 @@ class Profile(models.Model):
         (None, 'Не указано')
     )
 
-    user = models.OneToOneField(to=User,
-                                on_delete=models.CASCADE,
-                                primary_key=True,
-                                related_name='user')
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     is_librarian = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
     is_sys_admin = models.BooleanField(default=False)
 
-    base_image = models.ImageField(upload_to='avatars/', default='avatars/0.png')
-    image = models.ImageField(upload_to='avatars/', default='avatars/0.png')
+    base_image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')
+    image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')
 
     birth = models.DateField(null=True)
     show_email = models.BooleanField(default=False)
