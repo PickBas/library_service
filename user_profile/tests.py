@@ -48,3 +48,52 @@ class LoginTest(TestCase):
                                     data=data_to_send, follow=True)
         self.assertEquals(200, response.status_code)
         self.assertIn(('/', 302), response.redirect_chain)
+
+
+class RegistrationTest(TestCase):
+    """RegistrationTest class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        self.client = Client()
+        super(RegistrationTest, self).setUp()
+
+    def test_signup_page_loads(self) -> None:
+        """Testing if sign up page loads"""
+
+        response = self.client.get(reverse('account_signup'))
+        self.assertEquals(200, response.status_code)
+
+    def test_registering(self) -> None:
+        """Testing if it is possible to register"""
+
+        data_to_send = {
+            'email': 'test@email.com',
+            'username': 'test',
+            'password1': 'asdf123!',
+            'password2': 'asdf123!',
+        }
+
+        response = self.client.post(reverse('account_signup'),
+                                    data=data_to_send, follow=True)
+        self.assertEquals(200, response.status_code)
+        self.assertIn(('/', 302), response.redirect_chain)
+
+    def test_registering_with_existent_credentials(self) -> None:
+        """Testing if
+            a user is allowed to register with the same credentials twice"""
+
+        data_to_send = {
+            'email': 'FirstUserTest@FirstUserTest.FirstUserTest',
+            'username': 'FirstUserTestStudent',
+            'password1': 'asdf123!',
+            'password2': 'asdf123!',
+        }
+
+        response = self.client.post(reverse('account_signup'),
+                                    data=data_to_send, follow=True)
+        self.assertEquals(200, response.status_code)
+        self.assertNotIn(('/', 302), response.redirect_chain)
