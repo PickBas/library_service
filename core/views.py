@@ -10,7 +10,7 @@ class IndexPageView(View):
     def __init__(self, **kwargs: dict):
         self.template_name = 'core/index.html'
         self.context = {'page_name': 'Main page'}
-        super().__init__(**kwargs)
+        super(IndexPageView, self).__init__(**kwargs)
 
     def get(self, request: HttpRequest) -> render:
         """
