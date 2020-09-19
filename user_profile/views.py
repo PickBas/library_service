@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views import View
 
 from core.forms import CropAvatarForm
-from user_profile.forms import UpdateAvatarForm
+from user_profile.forms import UpdateAvatarForm, ProfileUpdateForm, UserUpdateForm
 
 
 class ProfilePageView(View):
@@ -40,6 +40,66 @@ class ProfilePageView(View):
         self.context['page_name'] = self.current_user.username
 
         return render(request, self.template_name, self.context)
+
+
+class ProfileUpdateView(View):
+    """ProfileUpdateView class"""
+
+    def __init__(self, **kwargs: dict):
+        self.template_name = 'profile/update_profile.html'
+        self.context = {'page_name': 'Редактирование профиля'}
+        self.current_profile = None
+        self.previous_birth = None
+        super(ProfileUpdateView, self).__init__(**kwargs)
+
+    def get(self, request: HttpRequest) -> render:
+        """
+        Processing GET request
+
+        :param request: HttpRequest
+        :returns: render
+        """
+
+        self.context['user_form'] = UserUpdateForm(instance=request.user)
+        self.context['profile_form'] = ProfileUpdateForm(instance=request.user.profile)
+        self.previous_birth = request.user.profile.birth
+
+        return render(request, self.template_name, self.context)
+
+    def post(self, request: HttpRequest, **kwargs: dict) -> redirect:
+        """
+        Processing POST request
+
+        :param request: HttpRequest
+        :param kwargs: dict
+        :returns: redirect
+        """
+
+        self.previous_birth = request.user.profile.birth
+
+        user_form = UserUpdateForm(
+            request.POST,
+            instance=request.user)
+
+        self.current_profile = request.user.profile
+
+        self.current_profile.show_email = False if request.POST.get(
+            'show_email') is None else True
+
+        profile_form = ProfileUpdateForm(request.POST,
+                                         instance=self.current_profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+
+            if self.current_profile.birth is None:
+                self.current_profile.birth = self.previous_birth
+                self.current_profile.save()
+
+            return redirect(reverse('profile_main_page', kwargs={'pk': request.user.id}))
+
+        return self.get(request)
 
 
 class AvatarUpdateView(View):
@@ -99,14 +159,14 @@ class AvatarUpdateView(View):
             try:
                 resized_image.save(io, 'JPEG', quality=100)
                 self.current_user.profile.image.save('image_{}.jpg'.format(self.current_user.id),
-                                                ContentFile(io.getvalue()),
-                                                save=False)
+                                                     ContentFile(io.getvalue()),
+                                                     save=False)
                 self.current_user.profile.save()
             except OSError:
                 resized_image.save(io, 'PNG', quality=100)
                 self.current_user.profile.image.save('image_{}.png'.format(self.current_user.id),
-                                                ContentFile(io.getvalue()),
-                                                save=False)
+                                                     ContentFile(io.getvalue()),
+                                                     save=False)
                 self.current_user.profile.save()
 
-            return redirect(reverse("profile_main_page", kwargs={'pk': 1}))
+            return redirect(reverse('profile_main_page', kwargs={'pk': request.user.id}))

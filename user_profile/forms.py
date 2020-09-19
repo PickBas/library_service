@@ -7,9 +7,7 @@ from user_profile.models import Profile
 
 
 class ProfileUpdateForm(forms.ModelForm):
-    """
-    ProfileUpdateForm class. Used for updating user profile
-    """
+    """ProfileUpdateForm class. Used for updating user profile"""
 
     def __init__(self, *args, **kwargs):
         super(ProfileUpdateForm, self).__init__(*args, **kwargs)
@@ -35,12 +33,14 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
+        labels = {
+            'first_name': 'Имя',
+            'last_name': 'Фамилия'
+        }
 
 
 class UpdateAvatarForm(forms.ModelForm):
-    """
-    Form for updating user avatar
-    """
+    """Form for updating user avatar"""
     base_image = forms.ImageField(required=True)
 
     class Meta:
