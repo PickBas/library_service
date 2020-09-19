@@ -19,13 +19,12 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('birth', 'show_email')
+        fields = ('birth', )
         widgets = {
             'birth': forms.DateInput(attrs={'type': 'date'}),
         }
         labels = {
             'birth': 'Дата рождения',
-            'show_email': 'Отображать почту',
         }
 
 

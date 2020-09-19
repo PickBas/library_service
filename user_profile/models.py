@@ -23,7 +23,6 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')
 
     birth = models.DateField(null=True)
-    show_email = models.BooleanField(default=False)
 
     given_books_all_times = models.ManyToManyField(Book, related_name='given_books')
 
