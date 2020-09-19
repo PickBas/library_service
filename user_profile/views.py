@@ -20,7 +20,7 @@ class ProfilePageView(View):
         self.template_name = 'profile/profile_main_page.html'
         self.context = {}
         self.current_user = None
-        super(ProfilePageView, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def get(self, request: HttpRequest, **kwargs: dict) -> render:
         """
@@ -50,7 +50,7 @@ class ProfileUpdateView(View):
         self.context = {'page_name': 'Редактирование профиля'}
         self.current_profile = None
         self.previous_birth = None
-        super(ProfileUpdateView, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def get(self, request: HttpRequest) -> render:
         """
@@ -141,17 +141,17 @@ class AvatarUpdateView(View):
         if crop_form.is_valid() and avatar_form.is_valid():
             avatar_form.save()
 
-            x = float(request.POST.get('x'))
-            y = float(request.POST.get('y'))
-            w = float(request.POST.get('width'))
-            h = float(request.POST.get('height'))
+            x_axis = float(request.POST.get('x'))
+            y_axis = float(request.POST.get('y'))
+            width = float(request.POST.get('width'))
+            height = float(request.POST.get('height'))
 
             if request.FILES.get('base_image'):
                 image = Image.open(request.FILES.get('base_image'))
             else:
                 image = Image.open(self.current_user.profile.base_image)
 
-            cropped_image = image.crop((x, y, w + x, h + y))
+            cropped_image = image.crop((x_axis, y_axis, width + x_axis, height + y_axis))
             resized_image = cropped_image.resize((256, 256), Image.ANTIALIAS)
 
             io = BytesIO()
