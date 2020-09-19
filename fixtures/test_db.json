@@ -3,7 +3,7 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$216000$pRc5wVJWvywO$8mw4gYhJsgnUB6c51t9xa+gt7u+VnPF/Z1AbAczMkRk=",
+    "password": "pbkdf2_sha256$216000$zpVpiRxsJMcV$tDh3jCd2L9pbycd/Wr4uFlzlTAD/MV4VBSnqJr6Ll8o=",
     "last_login": null,
     "is_superuser": false,
     "username": "FirstUserTestStudent",
@@ -12,7 +12,7 @@
     "email": "FirstUserTest@firstusertest.firstusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-09-13T12:37:22.603Z",
+    "date_joined": "2020-09-19T12:41:31.526Z",
     "groups": [],
     "user_permissions": []
   }
@@ -21,7 +21,7 @@
   "model": "auth.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$216000$8ftdRY8AvC4N$gXOxB6kL9yySM4mmZ9ighjCb15WTSf8TH/UUkHdSjUs=",
+    "password": "pbkdf2_sha256$216000$L5pjBIiiKOHq$sYnpS5mHVj0bL2oLsFtjeq9o1BPAzu62y2uAo6ALdtE=",
     "last_login": null,
     "is_superuser": false,
     "username": "SecondUserTestLibrarian",
@@ -30,7 +30,7 @@
     "email": "SecondUserTest@secondusertest.secondusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-09-13T12:37:22.771Z",
+    "date_joined": "2020-09-19T12:41:31.699Z",
     "groups": [],
     "user_permissions": []
   }
@@ -54,7 +54,6 @@
     "base_image": "avatars/0.jpg",
     "image": "avatars/0.jpg",
     "birth": null,
-    "show_email": false,
     "given_books_all_times": [],
     "books_in_use": []
   }
@@ -70,7 +69,6 @@
     "base_image": "avatars/0.jpg",
     "image": "avatars/0.jpg",
     "birth": null,
-    "show_email": false,
     "given_books_all_times": [],
     "books_in_use": []
   }

@@ -40,8 +40,48 @@ except FileNotFoundError:
     SECRET_KEY = get_random_string(50, CHARS)
     secret_key_file = open('.secret.txt', 'x')
     secret_key_file.write(SECRET_KEY)
+    secret_key_file.close()
 
 # e^81bc@z&=j1%dq(%307ye*=81t$osh!@nq+f8)2ek1b*m1)0p
+
+# Invite key generator for librarians and admins
+CHARS_STUFF = 'abcdefghijklmnopqrstuvwxyz0123456789'
+
+ADMIN_KEY = ''
+
+try:
+    admin_key_file = open('.admin_key.txt', 'r')
+    key_tmp = admin_key_file.readline()
+    if len(key_tmp) == 10:
+        ADMIN_KEY = key_tmp
+        admin_key_file.close()
+    else:
+        admin_key_file.close()
+        os.remove('.admin_key.txt')
+        raise FileNotFoundError
+except FileNotFoundError:
+    ADMIN_KEY = get_random_string(10, CHARS_STUFF)
+    admin_key_file = open('.admin_key.txt', 'x')
+    admin_key_file.write(ADMIN_KEY)
+    admin_key_file.close()
+
+LIBRARIAN_KEY = ''
+
+try:
+    librarian_key_file = open('.librarian_key.txt', 'r')
+    key_tmp = librarian_key_file.readline()
+    if len(key_tmp) == 10:
+        LIBRARIAN_KEY = key_tmp
+        librarian_key_file.close()
+    else:
+        librarian_key_file.close()
+        os.remove('.librarian_key.txt')
+        raise FileNotFoundError
+except FileNotFoundError:
+    LIBRARIAN_KEY = get_random_string(10, CHARS_STUFF)
+    librarian_key_file = open('.librarian_key.txt', 'x')
+    librarian_key_file.write(LIBRARIAN_KEY)
+    librarian_key_file.close()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -179,3 +219,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 FIXTURE_DIRS = [
     'fixtures',
 ]
+
+ACCOUNT_FORMS = {'signup': 'user_profile.forms.CustomSignupForm'}

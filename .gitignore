@@ -133,6 +133,8 @@ dmypy.json
 
 # secret
 .secret.txt
+.admin_key.txt
+.librarian_key.txt
 
 # migrations
 */migrations/00*.py

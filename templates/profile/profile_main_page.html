@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 
 {% block main %}
-    <div>
+    <div class="mt-1">
         <img class="rounded mx-auto d-block" src="{{ current_user.profile.image.url }}" height="300" width="300" alt="avatar">
     </div>
     <div class="card mt-2 mx-auto">
         <div class="card-body">
             <div class="row align-items-start">
                 <div class="col text-center">
-                    Учитель/Ученик
+                    {{ current_user.profile.get_role_str }}
                 </div>
                 <div class="col text-center">
                     {{ current_user.profile.get_profile_name }}
                 </div>
                 <div class="col text-center">
-                    Всего книг вернул: 0
+                    Книги: {{ current_user.profile.books_in_use|length }}
                 </div>
             </div>
         </div>
