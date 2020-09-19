@@ -83,8 +83,7 @@ class ProfileUpdateView(View):
 
         self.current_profile = request.user.profile
 
-        self.current_profile.show_email = False if request.POST.get(
-            'show_email') is None else True
+        self.current_profile.show_email = request.POST.get('show_email') is not None
 
         profile_form = ProfileUpdateForm(request.POST,
                                          instance=self.current_profile)
@@ -109,7 +108,7 @@ class AvatarUpdateView(View):
         self.template_name = 'profile/update_avatar.html'
         self.context = {'page_name': 'Смена фото'}
         self.current_user = None
-        super(AvatarUpdateView, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def get(self, request: HttpRequest) -> render:
         """
@@ -124,7 +123,7 @@ class AvatarUpdateView(View):
 
         return render(request, self.template_name, self.context)
 
-    def post(self, request: HttpRequest) -> redirect:
+    def post(self, request: HttpRequest):
         """
         Cropping and saving user avatar
 
