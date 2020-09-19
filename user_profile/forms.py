@@ -1,7 +1,9 @@
 """user_profile forms.py"""
-
+from allauth.account.forms import SignupForm
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.http import HttpRequest
 
 from user_profile.models import Profile
 
@@ -46,3 +48,23 @@ class UpdateAvatarForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('base_image',)
+
+
+class CustomSignupForm(SignupForm):
+    """CustomSignupForm class"""
+
+    def __init__(self, *args: tuple, **kwargs: dict):
+        super().__init__(*args, **kwargs)
+        self.fields['invite_key'] = forms.CharField(max_length=15, required=False)
+
+    def save(self, request: HttpRequest) -> None:
+        """
+        Saving new user
+
+        :param request: HttpRequest
+        """
+
+        user = super().save(request)
+        profile = Profile(user=user)
+        profile.save()
+        return user

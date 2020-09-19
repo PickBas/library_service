@@ -1,8 +1,6 @@
 """user_profile models.py"""
-from allauth.account.signals import user_signed_up
 from django.contrib.auth.models import User
 from django.db import models
-from django.dispatch import receiver
 
 from book.models import Book
 
@@ -49,10 +47,3 @@ class Profile(models.Model):
             return self.user.first_name + ' (' + self.user.username + ')'
 
         return self.user.last_name + ' (' + self.user.username + ')'
-
-
-@receiver(user_signed_up)
-def create_user_profile(**kwargs: dict) -> None:
-    """Creating user profile after registration"""
-    profile = Profile(user=kwargs['user'])
-    profile.save()
