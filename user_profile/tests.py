@@ -1,4 +1,6 @@
 """user_profile tests.py"""
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -128,7 +130,7 @@ class ProfileEditTest(TestCase):
         self.assertTrue(user_update_form.is_valid())
 
         f_profile_data = {
-            'show_email': True
+            'birth': datetime.now()
         }
         profile_update_form = ProfileUpdateForm(f_profile_data, instance=self.current_user.profile)
         self.assertTrue(profile_update_form.is_valid())
@@ -141,15 +143,10 @@ class ProfileEditTest(TestCase):
         """
 
         form_user_update_data = {'first_name': 'test', 'last_name': 'usertest'}
-        form_profile_data = {
-            'show_email': True
-        }
 
         response = self.client.post(reverse('update_profile_info'), {
                                         **form_user_update_data,
-                                        **form_profile_data,
                                     })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(User.objects.get(id=1).profile.show_email, form_profile_data['show_email'])
         self.assertEqual(User.objects.get(id=1).last_name, form_user_update_data['last_name'])

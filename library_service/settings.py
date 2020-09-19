@@ -83,7 +83,6 @@ except FileNotFoundError:
     librarian_key_file.write(LIBRARIAN_KEY)
     librarian_key_file.close()
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
