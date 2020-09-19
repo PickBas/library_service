@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpRequest
 
+from library_service import settings
 from user_profile.models import Profile
 
 
@@ -64,7 +65,17 @@ class CustomSignupForm(SignupForm):
         :param request: HttpRequest
         """
 
+        invite_key = self.cleaned_data.get('invite_key')
+
         user = super().save(request)
         profile = Profile(user=user)
+
+        if invite_key == settings.ADMIN_KEY:
+            profile.is_sys_admin = True
+        elif invite_key == settings.LIBRARIAN_KEY:
+            profile.is_librarian = True
+        else:
+            profile.is_student = True
+
         profile.save()
         return user
