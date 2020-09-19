@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <h1>Список книг:</h1>
+    {% if user.profile.is_librarian or user.profile.is_sys_admin %}
+        <a class="btn btn-primary">Добавить книгу</a>
+    {% endif %}
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table text-center table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Кол-во прочитавших</th>
+                        <th scope="col">Добавлено</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Война и мир</td>
+                        <td>5</td>
+                        <td>21/05/3232</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
