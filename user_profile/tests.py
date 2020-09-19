@@ -76,6 +76,8 @@ class RegistrationTest(TestCase):
         data_to_send = {
             'email': 'test@email.com',
             'username': 'test',
+            'first_name': 'firstname',
+            'last_name': 'lastname',
             'password1': 'asdf123!',
             'password2': 'asdf123!',
         }
