@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra__css %}
+    <link  href="{% static 'css/cropper.css' %}" rel="stylesheet">
+{% endblock  %}
+
+{% block main %}
+    <style>
+        .clearable-file-input {
+            visibility: hidden;
+        }
+    </style>
+
+    <div class="card">
+        <div class="card-body">
+            <h5>Изменение аватарки</h5>
+            <hr>
+            <form method="post" enctype="multipart/form-data" id='avatars_form'>
+                {% csrf_token %}
+                {{ crop_form }}
+                {{ avatar_form }}
+                <div class="mt-3">
+                    <img id="avatar" src="{{ user.profile.base_image.url }}" style="width: 100%;" alt="avatar_image">
+                </div>
+            </form>
+            <input type="submit" value="Сохранить" class="mt-3 btn btn-block btn-primary" onclick="setDataAndSubmit()">
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra__js %}
+    <script src="{% static 'js/cropper.js' %}"></script>
+    <script src="{% static 'js/front_crop_profile.js' %}"></script>
+{% endblock %}

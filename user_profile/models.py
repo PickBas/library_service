@@ -31,6 +31,25 @@ class Profile(models.Model):
 
     books_in_use = models.ManyToManyField(Book, related_name='books_in_use')
 
+    def get_profile_name(self) -> str:
+        """
+        Getting full name of a user
+
+        :returns: str
+        """
+
+        if not self.user.first_name and not self.user.last_name:
+            return self.user.username
+
+        if self.user.first_name and self.user.last_name:
+            return self.user.first_name + ' ' + self.user.last_name\
+                   + ' (' + self.user.username + ')'
+
+        if self.user.first_name:
+            return self.user.first_name + ' (' + self.user.username + ')'
+
+        return self.user.last_name + ' (' + self.user.username + ')'
+
 
 @receiver(user_signed_up)
 def create_user_profile(**kwargs: dict) -> None:
