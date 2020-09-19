@@ -1,8 +1,16 @@
 """user_profile views.py"""
+from io import BytesIO
+
+from PIL import Image
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.http import HttpRequest, Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
+
+from core.forms import CropAvatarForm
+from user_profile.forms import UpdateAvatarForm
 
 
 class ProfilePageView(View):
@@ -32,3 +40,73 @@ class ProfilePageView(View):
         self.context['page_name'] = self.current_user.username
 
         return render(request, self.template_name, self.context)
+
+
+class AvatarUpdateView(View):
+    """AvatarUpdateView class"""
+
+    def __init__(self, **kwargs: dict):
+        self.template_name = 'profile/update_avatar.html'
+        self.context = {'page_name': 'Смена фото'}
+        self.current_user = None
+        super(AvatarUpdateView, self).__init__(**kwargs)
+
+    def get(self, request: HttpRequest) -> render:
+        """
+        Processing GET request
+
+        :param request: HttpRequest
+        :returns: render
+        """
+
+        self.context['avatar_form'] = UpdateAvatarForm()
+        self.context['crop_form'] = CropAvatarForm()
+
+        return render(request, self.template_name, self.context)
+
+    def post(self, request: HttpRequest) -> redirect:
+        """
+        Cropping and saving user avatar
+
+        :param request: request
+        :returns: redirect
+        """
+
+        avatar_form = UpdateAvatarForm(request.POST, request.FILES,
+                                       instance=request.user.profile)
+        crop_form = CropAvatarForm(request.POST)
+
+        self.current_user = request.user
+
+        if crop_form.is_valid() and avatar_form.is_valid():
+            avatar_form.save()
+
+            x = float(request.POST.get('x'))
+            y = float(request.POST.get('y'))
+            w = float(request.POST.get('width'))
+            h = float(request.POST.get('height'))
+
+            if request.FILES.get('base_image'):
+                image = Image.open(request.FILES.get('base_image'))
+            else:
+                image = Image.open(self.current_user.profile.base_image)
+
+            cropped_image = image.crop((x, y, w + x, h + y))
+            resized_image = cropped_image.resize((256, 256), Image.ANTIALIAS)
+
+            io = BytesIO()
+
+            try:
+                resized_image.save(io, 'JPEG', quality=100)
+                self.current_user.profile.image.save('image_{}.jpg'.format(self.current_user.id),
+                                                ContentFile(io.getvalue()),
+                                                save=False)
+                self.current_user.profile.save()
+            except OSError:
+                resized_image.save(io, 'PNG', quality=100)
+                self.current_user.profile.image.save('image_{}.png'.format(self.current_user.id),
+                                                ContentFile(io.getvalue()),
+                                                save=False)
+                self.current_user.profile.save()
+
+            return redirect(reverse("profile_main_page", kwargs={'pk': 1}))

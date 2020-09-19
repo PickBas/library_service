@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
 
 {% block main %}
-    <h1>This is the {{ current_user.username }} page</h1>
+    <div>
+        <img class="rounded mx-auto d-block" src="{{ current_user.profile.image.url }}" height="300" width="300" alt="avatar">
+    </div>
+    <div class="card mt-2 mx-auto">
+        <div class="card-body">
+            <div class="row align-items-start">
+                <div class="col text-center">
+                    Учитель/Ученик
+                </div>
+                <div class="col text-center">
+                    {{ current_user.username }}
+                </div>
+                <div class="col text-center">
+                    Всего книг вернул: 0
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user == current_user %}
+        <a class="btn btn-primary btn-lg btn-block mt-2" href="#{# {% url 'update_profile_avatar' %} #}">Обновить профиль</a>
+        <a class="btn btn-secondary btn-lg btn-block mt-2" href="{% url 'update_profile_avatar' %}">Обновить фото</a>
+    {% endif %}
 {% endblock %}
