@@ -11,7 +11,7 @@
                     Учитель/Ученик
                 </div>
                 <div class="col text-center">
-                    {{ current_user.username }}
+                    {{ current_user.profile.get_profile_name }}
                 </div>
                 <div class="col text-center">
                     Всего книг вернул: 0
