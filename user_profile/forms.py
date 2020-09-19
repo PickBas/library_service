@@ -10,7 +10,7 @@ class ProfileUpdateForm(forms.ModelForm):
     """ProfileUpdateForm class. Used for updating user profile"""
 
     def __init__(self, *args, **kwargs):
-        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for key in self.fields:
             self.fields[key].required = False

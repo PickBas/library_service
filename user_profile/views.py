@@ -66,7 +66,7 @@ class ProfileUpdateView(View):
 
         return render(request, self.template_name, self.context)
 
-    def post(self, request: HttpRequest, **kwargs: dict) -> redirect:
+    def post(self, request: HttpRequest) -> redirect:
         """
         Processing POST request
 
@@ -154,18 +154,18 @@ class AvatarUpdateView(View):
             cropped_image = image.crop((x_axis, y_axis, width + x_axis, height + y_axis))
             resized_image = cropped_image.resize((256, 256), Image.ANTIALIAS)
 
-            io = BytesIO()
+            input_output = BytesIO()
 
             try:
-                resized_image.save(io, 'JPEG', quality=100)
+                resized_image.save(input_output, 'JPEG', quality=100)
                 self.current_user.profile.image.save('image_{}.jpg'.format(self.current_user.id),
-                                                     ContentFile(io.getvalue()),
+                                                     ContentFile(input_output.getvalue()),
                                                      save=False)
                 self.current_user.profile.save()
             except OSError:
-                resized_image.save(io, 'PNG', quality=100)
+                resized_image.save(input_output, 'PNG', quality=100)
                 self.current_user.profile.image.save('image_{}.png'.format(self.current_user.id),
-                                                     ContentFile(io.getvalue()),
+                                                     ContentFile(input_output.getvalue()),
                                                      save=False)
                 self.current_user.profile.save()
 

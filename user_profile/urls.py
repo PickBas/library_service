@@ -12,4 +12,3 @@ urlpatterns = [
     path('profile/update/profile/', login_required(ProfileUpdateView.as_view()),
          name='update_profile_info')
 ]
-
