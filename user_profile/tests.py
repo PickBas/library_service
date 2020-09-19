@@ -1,6 +1,9 @@
 """user_profile tests.py"""
+from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
+
+from user_profile.forms import UserUpdateForm, ProfileUpdateForm
 
 
 class LoginTest(TestCase):
@@ -97,3 +100,54 @@ class RegistrationTest(TestCase):
                                     data=data_to_send, follow=True)
         self.assertEquals(200, response.status_code)
         self.assertNotIn(('/', 302), response.redirect_chain)
+
+
+class ProfileEditTest(TestCase):
+    """class ProfileEditTest"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up ProfileEditTest"""
+        super().setUp()
+        self.client = Client()
+        self.current_user = User.objects.get(id=1)
+        self.client.force_login(user=self.current_user)
+
+    def test_forms(self) -> None:
+        """
+        Testing forms validation
+
+        :returns: None
+        """
+
+        f_user_update_data = {'first_name': 'test', 'last_name': 'usertest'}
+        user_update_form = UserUpdateForm(f_user_update_data, instance=self.current_user)
+        self.assertTrue(user_update_form.is_valid())
+
+        f_profile_data = {
+            'show_email': True
+        }
+        profile_update_form = ProfileUpdateForm(f_profile_data, instance=self.current_user.profile)
+        self.assertTrue(profile_update_form.is_valid())
+
+    def test_changing_data(self) -> None:
+        """
+        Testing if it's possible to change the profile data
+
+        :returns: None
+        """
+
+        form_user_update_data = {'first_name': 'test', 'last_name': 'usertest'}
+        form_profile_data = {
+            'show_email': True
+        }
+
+        response = self.client.post(reverse('update_profile_info'), {
+                                        **form_user_update_data,
+                                        **form_profile_data,
+                                    })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.get(id=1).profile.show_email, form_profile_data['show_email'])
+        self.assertEqual(User.objects.get(id=1).last_name, form_user_update_data['last_name'])

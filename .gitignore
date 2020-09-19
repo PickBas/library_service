@@ -137,3 +137,7 @@ dmypy.json
 # migrations
 */migrations/00*.py
 
+# media
+media/avatars/*
+!media/avatars/0.jpg
+
