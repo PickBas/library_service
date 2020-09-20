@@ -6,7 +6,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Книги</a>
+                <a class="nav-link" href="{% url 'books_list_page' %}">Книги</a>
             </li>
         </ul>
         {% if user.is_authenticated %}

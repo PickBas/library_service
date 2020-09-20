@@ -141,5 +141,6 @@ dmypy.json
 
 # media
 media/avatars/*
+media/books/*
 !media/avatars/0.jpg
 
