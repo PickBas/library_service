@@ -1,7 +1,7 @@
 """book views.py"""
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.views import View
 
@@ -9,7 +9,7 @@ from book.models import Book
 from book.forms import UploadBookForm
 
 
-class BooksPageView(View):
+class BookListPageView(View):
     """BooksPageView class"""
 
     def __init__(self, **kwargs: dict):
@@ -24,6 +24,8 @@ class BooksPageView(View):
         :param request: HttpRequest
         :returns: render
         """
+
+        self.context['books'] = Book.objects.all()
 
         return render(request, self.template_name, self.context)
 
@@ -67,9 +69,35 @@ class AddBookPageView(View):
         book_form = UploadBookForm(request.POST, request.FILES)
 
         if book_form.is_valid():
-            book = Book(file=book_form.cleaned_data.get('file'))
+            book = Book(file=request.FILES['file'],
+                        in_use_by=None,
+                        name=book_form.cleaned_data.get('name'))
             book.save()
             return redirect(reverse('books_list_page'))
 
-        print(request.FILES)
         return self.get(request)
+
+
+class BookPageView(View):
+    """BookPageView class"""
+
+    def __init__(self, **kwargs: dict):
+        self.template_name = 'book/book_main_page.html'
+        self.context = {}
+        super().__init__(**kwargs)
+
+    def get(self, request: HttpRequest, **kwargs: dict) -> render:
+        """
+        Processing GET request
+
+        :param request: HttpRequest
+        :param kwargs: pk
+        :returns: render
+        """
+
+        current_book = get_object_or_404(Book, id=kwargs['pk'])
+
+        self.context['page_name'] = current_book.name
+        self.context['current_book'] = current_book
+
+        return render(request, self.template_name, self.context)
