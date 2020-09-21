@@ -29,15 +29,15 @@
 * Команда для клонирования: git clone https://ссылка_на_репу
 
 #### 1. Копируем сылку 
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/1.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/1.png)
 #### 2. Переходим в рабочую дерикторию, кликаем правой кнопкой мыши, выбираем *Git bash here*
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/2.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/2.png)
 #### 3. Пишем команду для клонирования репы в терминал, ждем, пока клонирование завершится
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/3.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/3.png)
 #### 4. Переходим в репозиторий, в нашем случае он называется *"test"*. Видим, что он пуст
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/4.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/4.png)
 #### 5. Открываем в нем терминал (см. пункт 2). Проверим его статус командой git status. На данный момент сохранять нечего
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/5.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/5.png)
 
 ### Создание версии
 * Создадим файл для демонстрации
@@ -47,42 +47,42 @@
 * Скажем Git отослать новую версию на удаленное хранилище, в нашем случае - **GitHub**
 
 #### 1. Создаем файл, сохраняем
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/6.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/6.png)
 #### 2. Проверяем, увидел ли Git наличие нового файла в репе
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/7.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/7.png)
 #### 3. Говорим Git проследить за этим файлом командой "git add ." (. - текущая дериктория)
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/8.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/8.png)
 #### 4. Говорим Git создать верисю, которую мы будем называть "*The first version!*"
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/commit.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/commit.png)
 #### 5. Проверяем командой "git log" появилась ли новая версия
 * Зеленый - название версии
-* Красный - автор версии (Те данные, что вы указывали в git config --global user.name/email будут отображаться здесь. см. [Установка Git](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/GIT_INSTALLATION.md))
+* Красный - автор версии (Те данные, что вы указывали в git config --global user.name/email будут отображаться здесь. см. [Установка Git](https://github.com/PickBas/library_service/blob/master/docs/GIT_INSTALLATION.md))
 * Розовый - текущая ветка
 * Желтый - уникальный идентификатор сохранения (коммита).
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/9.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/9.png)
 #### 6. Просим Git командой *"git pull"* проверить, не поступило ли изменений в наш репозиториев от других программистов. Говорим отослать новую версию на удаленное хранилище
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/10.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/10.png)
 #### 7. Заходим на GitHub, видим наш новый файл
 * Красный - название файла
 * Зеленый - название версии (коммита)
 * Желтый - количество коммитов
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/11.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/11.png)
 #### 8. Кликнув на количество коммитов, мы можем увидеть ту же информацию, что и в пятом пункте.
 * Красный - самая первая версия репозитория
 * Зеленый - новая версия, которую мы только что создали
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/12.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/12.png)
 #### 9. Кликнув на наш первый коммит -> Browse code, мы можем увидеть как выглядел наш репозиторий в старой версии (До того, как мы создали новый файл).
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/13.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/13.png)
 #### 10. Теперь вернемся к нашей новой версии, и изменим наш файл прямо на GitHub, после чего закоммитим (создадим еще одну версию).
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/14.png)
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/15.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/14.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/15.png)
 
 Теперь наш файл содержит текст "Вторая запись в новом файле".
 
 #### 11. Новая версия есть, но только на удаленном хранилище. Чтобы обновить ее у нас на компьютере, мы вводим команду *git pull*, находясь в нашем репозитории
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/16.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/16.png)
 #### 12. Открываем файл и видим, что файл обновился.
-![alt text](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/assets/git_tutor/17.png)
+![alt text](https://raw.githubusercontent.com/PickBas/library_service/master/docs/assets/git_tutor/17.png)
 
 ## Шпаргалка
     git clone https://ссылка_на_репу - клонировать репозиторий
