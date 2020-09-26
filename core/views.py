@@ -4,6 +4,8 @@ from django.http import HttpRequest
 from django.shortcuts import render
 from django.views import View
 
+from book.models import Book
+
 
 class IndexPageView(View):
     """IndexPageView class"""
@@ -21,7 +23,9 @@ class IndexPageView(View):
         :return: render
         """
 
-        all_users = User.objects.filter(profile__is_student=True)
-        self.context['all_users'] = all_users
+        # all_users = User.objects.filter(profile__is_student=True)
+        # self.context['all_users'] = all_users
+
+        self.context['books'] = Book.objects.all()
 
         return render(request, self.template_name, self.context)
