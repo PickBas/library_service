@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
 
 {% block main %}
-    <h1>Hello, World!</h1>
+    <h1>Ученики:</h1>
+
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table text-center table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Книги</th>
+                        <th scope="col">Репутация</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for current_user in all_users %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ current_user.profile.get_profile_name }}</td>
+                            <td><a href="{% url 'book_page' 1 %}">{{ current_user.profile.books_in_use|length }}</a></td>
+                            <td>Должник</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
