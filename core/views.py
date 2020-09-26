@@ -4,8 +4,6 @@ from django.http import HttpRequest
 from django.shortcuts import render
 from django.views import View
 
-from user_profile.models import Profile
-
 
 class IndexPageView(View):
     """IndexPageView class"""

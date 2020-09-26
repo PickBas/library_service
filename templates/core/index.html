@@ -18,7 +18,7 @@
                     {% for current_user in all_users %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ current_user.profile.get_profile_name }}</td>
+                            <td>{{ current_user.profile.get_full_name }}</td>
                             <td><a href="{% url 'book_page' 1 %}">{{ current_user.profile.books_in_use|length }}</a></td>
                             <td>Должник</td>
                         </tr>

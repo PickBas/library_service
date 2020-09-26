@@ -28,7 +28,7 @@ class Profile(models.Model):
 
     books_in_use = models.ManyToManyField(Book, related_name='books_in_use')
 
-    def get_profile_name(self) -> str:
+    def get_full_name(self) -> str:
         """
         Getting full name of a user
 
