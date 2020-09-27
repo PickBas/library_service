@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    {% if current_book.read_history|length != 0 %}
+{#    {% if current_book.read_history|length != 0 %}#}
         <div class="row mt-5">
         <div class="col">
             <table class="table text-center table-striped">
@@ -32,7 +32,7 @@
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">Имя</th>
-                        <th scope="col">Дата возвращения</th>
+                        <th scope="col">Просрочил</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,6 +47,6 @@
             </table>
         </div>
     </div>
-    {% endif %}
+{#    {% endif %}#}
 
 {% endblock %}
