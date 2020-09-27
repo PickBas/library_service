@@ -9,7 +9,6 @@ class Book(models.Model):
 
     name = models.CharField(max_length=100, blank=True, null=True)
     info = models.CharField(max_length=500, blank=True, null=True)
-    file = models.FileField(upload_to='books')
     in_use_by = models.OneToOneField(to=User,
                                      on_delete=models.CASCADE,
                                      related_name='current_book_user',

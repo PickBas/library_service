@@ -72,7 +72,8 @@ class AddBookPageView(View):
 
         if book_form.is_valid():
             book = Book(in_use_by=None,
-                        name=book_form.cleaned_data.get('name'))
+                        name=book_form.cleaned_data.get('name'),
+                        info=book_form.cleaned_data.get('info'))
             book.save()
             return redirect(reverse('index_page'))
 
