@@ -19,3 +19,4 @@ class Book(models.Model):
     since_given = models.DateTimeField(default=timezone.now)
     since_back = models.DateTimeField(default=timezone.now)
     upload_time = models.DateTimeField(default=timezone.now)
+    when_should_be_back = models.DateTimeField(default=timezone.now)

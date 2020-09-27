@@ -4,6 +4,8 @@
 
     <h1 class="text-center mt-3 mb-2">{{ current_book.name }}</h1>
 
+
+
      <div class="card mt-4 mx-auto">
         <div class="card-body">
             <div class="row align-items-start">
@@ -18,35 +20,39 @@
                     {{ current_book.info }}
                 </div>
                 <div class="col text-center">
-                    Кол-во прочитавших: {{ current_book.read_history|length }}
+                    Кол-во прочитавших: {{ current_book.read_history.all|length }}
                 </div>
             </div>
         </div>
     </div>
 
-{#    {% if current_book.read_history|length != 0 %}#}
-        <div class="row mt-5">
-        <div class="col">
-            <table class="table text-center table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Имя</th>
-                        <th scope="col">Просрочил</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for student in students %}
+    {% if user.profile.is_librarian %}
+        <a class="btn btn-primary btn-lg btn-block mt-3" href="{% url 'give_book_page' current_book.id %}">Выписать</a>
+    {% endif %}
+
+    {% if current_book.read_history|length != 0 %}
+        <div class="row mt-3">
+            <div class="col">
+                <table class="table text-center table-striped">
+                    <thead class="table-dark">
                         <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url 'profile_main_page' student.id %}">{{ student.profile.get_full_name }}</a></td>
-                            <td>{{ back_date|time:"G:i" }}, {{ back_date|date:"d/m/Y" }}</td>
+                            <th scope="col">№</th>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Просрочил</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><a href="{% url 'profile_main_page' student.id %}">{{ student.profile.get_full_name }}</a></td>
+                                <td>{{ back_date|time:"G:i" }}, {{ back_date|date:"d/m/Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-{#    {% endif %}#}
+    {% endif %}
 
 {% endblock %}
