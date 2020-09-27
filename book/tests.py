@@ -21,7 +21,7 @@ class LibraryViewTest(TestCase):
     def test_page_loads(self) -> None:
         """Testing if library page loads"""
 
-        response = self.client.get(reverse("books_list_page"))
+        response = self.client.get(reverse("index_page"))
         self.assertEquals(200, response.status_code)
 
 
@@ -50,8 +50,30 @@ class BookTest(TestCase):
 
         data = {
             'name': 'test',
-            'file': SimpleUploadedFile('test.pdf', b'test')
+            'info': 'info about the book'
         }
 
         response = self.client.post(reverse('add_book_to_lib'), data)
         self.assertEquals(302, response.status_code)
+
+
+class StudentsListTestCase(TestCase):
+    """StudentsListTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        super().setUp()
+
+        self.client = Client()
+        self.current_user = User.objects.get(id=2)
+        self.client.force_login(user=self.current_user)
+
+    def test_student_list_page_loads(self) -> None:
+        """Testing if the students list page loads"""
+
+        response = self.client.get(reverse('all_students_page'))
+
+        self.assertEquals(200, response.status_code)

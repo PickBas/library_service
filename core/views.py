@@ -3,6 +3,8 @@ from django.http import HttpRequest
 from django.shortcuts import render
 from django.views import View
 
+from book.models import Book
+
 
 class IndexPageView(View):
     """IndexPageView class"""
@@ -19,5 +21,7 @@ class IndexPageView(View):
         :param request: HttpRequest
         :return: render
         """
+
+        self.context['books'] = Book.objects.all()
 
         return render(request, self.template_name, self.context)

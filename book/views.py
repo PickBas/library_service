@@ -1,4 +1,5 @@
 """book views.py"""
+from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
 from django.shortcuts import redirect, render, get_object_or_404
@@ -9,23 +10,24 @@ from book.models import Book
 from book.forms import UploadBookForm
 
 
-class BookListPageView(View):
-    """BooksPageView class"""
+class StudentsPageView(View):
+    """StudentsPageView class"""
 
     def __init__(self, **kwargs: dict):
-        self.template_name = 'library/books_list.html'
-        self.context = {'page_name': 'Список книг в библиотеке'}
+        self.template_name = 'library/students.html'
+        self.context = {'page_name': 'Ученики'}
         super().__init__(**kwargs)
 
     def get(self, request: HttpRequest) -> render:
         """
-        Processing GET request
+        Processing get request
 
         :param request: HttpRequest
-        :returns: render
+        :return: render
         """
 
-        self.context['books'] = Book.objects.all()
+        all_users = User.objects.filter(profile__is_student=True)
+        self.context['all_users'] = all_users
 
         return render(request, self.template_name, self.context)
 
@@ -66,14 +68,14 @@ class AddBookPageView(View):
         if not request.user.profile.is_librarian:
             raise PermissionDenied()
 
-        book_form = UploadBookForm(request.POST, request.FILES)
+        book_form = UploadBookForm(request.POST)
 
         if book_form.is_valid():
-            book = Book(file=request.FILES['file'],
-                        in_use_by=None,
-                        name=book_form.cleaned_data.get('name'))
+            book = Book(in_use_by=None,
+                        name=book_form.cleaned_data.get('name'),
+                        info=book_form.cleaned_data.get('info'))
             book.save()
-            return redirect(reverse('books_list_page'))
+            return redirect(reverse('index_page'))
 
         return self.get(request)
 

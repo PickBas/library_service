@@ -8,7 +8,6 @@ class UploadBookForm(forms.Form):
     name = forms.CharField(max_length=100,
                            label='Название')
 
-    file = forms.FileField(label='Выберете книгу',
-                           widget=forms.FileInput(
-                               attrs={'accept': 'application/pdf'}
-                           ))
+    info = forms.CharField(max_length=500,
+                           label='Информация о книге',
+                           widget=forms.Textarea())
