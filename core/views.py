@@ -1,5 +1,4 @@
 """Core views.py"""
-from django.contrib.auth.models import User
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.views import View
@@ -22,9 +21,6 @@ class IndexPageView(View):
         :param request: HttpRequest
         :return: render
         """
-
-        # all_users = User.objects.filter(profile__is_student=True)
-        # self.context['all_users'] = all_users
 
         self.context['books'] = Book.objects.all()
 

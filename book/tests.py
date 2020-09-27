@@ -49,7 +49,8 @@ class BookTest(TestCase):
         """Testing if it is possible to upload a book"""
 
         data = {
-            'name': 'test'
+            'name': 'test',
+            'info': 'info about the book'
         }
 
         response = self.client.post(reverse('add_book_to_lib'), data)
