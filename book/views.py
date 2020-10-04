@@ -156,7 +156,7 @@ class GiveBookPageView(View):
         if book_form.is_valid():
             current_book.when_should_be_back = book_form.cleaned_data.get('date_back')
 
-            to_student = User.objects.get(id=book_form.cleaned_data.get('student'))
+            to_student = User.objects.get(id=book_form.cleaned_data.get('student').id)
             to_student.profile.books_in_use.add(current_book)
 
             to_student.save()
