@@ -23,4 +23,31 @@
         <a class="btn btn-primary btn-lg btn-block mt-2" href="{% url 'update_profile_info' %}">Обновить профиль</a>
         <a class="btn btn-secondary btn-lg btn-block mt-2" href="{% url 'update_profile_avatar' %}">Обновить фото</a>
     {% endif %}
+
+    <h1 class="text-center mt-3">Книги</h1>
+
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table text-center table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Статус</th>
+                        <th scope="col">Вернуть</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in current_user.profile.books_in_use.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'book_page' book.id %}">{{ book.name }}</a></td>
+                            <td>{% if book.in_use_by %}Не доступна{% else %}Доступна{% endif %}</td>
+                            <td>{{ book.when_should_be_back|date:"d/m/Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

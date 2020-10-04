@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
 from django.views import View
 
 from book.models import Book
@@ -103,6 +104,38 @@ class BookPageView(View):
         self.context['current_book'] = current_book
 
         return render(request, self.template_name, self.context)
+
+    def post(self, request: HttpRequest, **kwargs: dict):
+        """
+        Processing POST request. Giving a book back.
+
+        :param request: HttpRequest
+        :param kwargs: pk
+        :returns: redirect
+        """
+
+        current_book = get_object_or_404(Book, id=kwargs['pk'])
+
+        from_student = current_book.in_use_by
+
+        from_student.profile.books_in_use.remove(current_book)
+
+        if current_book.when_should_be_back > timezone.now() and \
+                current_book not in from_student.profile.overdue_books.all():
+            from_student.profile.overdue_books.add(current_book)
+
+        from_student.save()
+
+        current_book.in_use_by = None
+        current_book.when_should_be_back = timezone.now()
+        current_book.since_back = timezone.now()
+
+        if from_student not in current_book.read_history.all():
+            current_book.read_history.add(from_student)
+
+        current_book.save()
+
+        return redirect(reverse('book_page', kwargs={'pk': current_book.id}))
 
 
 class GiveBookPageView(View):

@@ -4,8 +4,6 @@
 
     <h1 class="text-center mt-3 mb-2">{{ current_book.name }}</h1>
 
-
-
      <div class="card mt-4 mx-auto">
         <div class="card-body">
             <div class="row align-items-start">
@@ -26,11 +24,16 @@
         </div>
     </div>
 
-    {% if user.profile.is_librarian %}
+    {% if user.profile.is_librarian and not current_book.in_use_by %}
         <a class="btn btn-primary btn-lg btn-block mt-3" href="{% url 'give_book_page' current_book.id %}">Выписать</a>
+    {% elif user.profile.is_librarian and current_book.in_use_by %}
+        <form method="post" action="{% url 'book_page' current_book.id %}">
+            {% csrf_token %}
+            <input class="btn btn-success btn-lg btn-block mt-3" type="submit" value="Вернуть">
+        </form>
     {% endif %}
 
-    {% if current_book.read_history|length != 0 %}
+    {% if current_book.read_history.all|length != 0 %}
         <div class="row mt-3">
             <div class="col">
                 <table class="table text-center table-striped">
@@ -42,11 +45,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for student in students %}
+                        {% for student in current_book.read_history.all %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td><a href="{% url 'profile_main_page' student.id %}">{{ student.profile.get_full_name }}</a></td>
-                                <td>{{ back_date|time:"G:i" }}, {{ back_date|date:"d/m/Y" }}</td>
+                                <td>{% if current_book in student.profile.overdue_books.all %}Да{% else %}Нет{% endif %}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
