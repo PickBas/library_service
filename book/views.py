@@ -182,7 +182,6 @@ class GiveBookPageView(View):
             raise PermissionDenied()
 
         current_book = get_object_or_404(Book, id=kwargs['pk'])
-
         librarian = request.user
         book_form = GiveBookForm(request.POST)
 
@@ -203,4 +202,4 @@ class GiveBookPageView(View):
 
             return redirect(reverse('index_page'))
 
-        return self.get(request)
+        return self.get(request, **kwargs)
