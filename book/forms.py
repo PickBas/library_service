@@ -17,7 +17,8 @@ class UploadBookForm(forms.Form):
 class GiveBookForm(forms.Form):
     """GiveBookForm class"""
 
-    student = forms.ModelChoiceField(label='Ученик', queryset=User.objects.filter(profile__is_student=True))
+    student = forms.ModelChoiceField(label='Ученик',
+                                     queryset=User.objects.filter(profile__is_student=True))
 
     def __init__(self, *args: tuple, **kwargs: dict):
         super().__init__(*args, **kwargs)
@@ -25,4 +26,5 @@ class GiveBookForm(forms.Form):
                                            stud.profile.get_full_name())
                                           for stud in User.objects.filter(profile__is_student=True)]
 
-    date_back = forms.DateTimeField(label='Дата возврата', widget=forms.DateInput(attrs={'type': 'date'}))
+    date_back = forms.DateTimeField(label='Дата возврата',
+                                    widget=forms.DateInput(attrs={'type': 'date'}))

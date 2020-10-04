@@ -40,7 +40,7 @@ class Profile(models.Model):
             return self.user.username
 
         if self.user.first_name and self.user.last_name:
-            return self.user.first_name + ' ' + self.user.last_name\
+            return self.user.first_name + ' ' + self.user.last_name \
                    + ' (' + self.user.username + ')'
 
         if self.user.first_name:
@@ -70,5 +70,3 @@ class Profile(models.Model):
         """
 
         return Book.objects.get(id=book_id) in self.overdue_books.all()
-
-
