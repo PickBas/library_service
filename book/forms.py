@@ -17,10 +17,12 @@ class UploadBookForm(forms.Form):
 class GiveBookForm(forms.Form):
     """GiveBookForm class"""
 
-    STUDENTS = ()
+    student = forms.ModelChoiceField(label='Ученик', queryset=User.objects.filter(profile__is_student=True))
 
-    for student in User.objects.filter(profile__is_student=True):
-        STUDENTS += ((student.id, student.profile.get_full_name()),)
+    def __init__(self, *args: tuple, **kwargs: dict):
+        super().__init__(*args, **kwargs)
+        self.fields['student'].choices = [(stud.pk,
+                                           stud.profile.get_full_name())
+                                          for stud in User.objects.filter(profile__is_student=True)]
 
-    student = forms.ChoiceField(label='Ученик', choices=STUDENTS)
     date_back = forms.DateTimeField(label='Дата возврата', widget=forms.DateInput(attrs={'type': 'date'}))
