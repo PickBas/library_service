@@ -101,22 +101,16 @@ class GiveBookTestCase(TestCase):
         self.current_user = User.objects.get(id=IDS['librarian_id'])
         self.client.force_login(user=self.current_user)
 
-    def test_book_giving(self) -> None:
-        """Testing if a librarian can give a book to a student"""
+    def test_book_giving_page_loads(self) -> None:
+        """Testing page load"""
 
         data = {
-            'name': 'test',
-            'info': 'info about the book'
+            'name': 'test2',
+            'info': 'info about the book2'
         }
 
         self.client.post(reverse('add_book_to_lib'), data)
 
-        data = {
-            'student': User.objects.get(id=IDS['student_id']),
-            'date_back': datetime.today()
-        }
+        response = self.client.get(reverse('give_book_page', kwargs={'pk': 2}))
 
-        response = self.client.post(reverse('give_book_page', kwargs={'pk': 2}),
-                                    data)
-
-        self.assertEquals(302, response.status_code)
+        self.assertEquals(200, response.status_code)
