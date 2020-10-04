@@ -23,6 +23,7 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')
 
     birth = models.DateField(null=True)
+    overdue_books = models.ManyToManyField(Book, related_name='overdue_books')
 
     given_books_all_times = models.ManyToManyField(Book, related_name='given_books')
 
@@ -39,7 +40,7 @@ class Profile(models.Model):
             return self.user.username
 
         if self.user.first_name and self.user.last_name:
-            return self.user.first_name + ' ' + self.user.last_name\
+            return self.user.first_name + ' ' + self.user.last_name \
                    + ' (' + self.user.username + ')'
 
         if self.user.first_name:
@@ -59,3 +60,13 @@ class Profile(models.Model):
         if self.is_librarian:
             return 'Библиотекарь'
         return 'Ученик'
+
+    def is_overdue_by_id(self, book_id: int) -> bool:
+        """
+        Getting info about book overdue
+
+        :param book_id: id of a book
+        :returns: bool
+        """
+
+        return Book.objects.get(id=book_id) in self.overdue_books.all()

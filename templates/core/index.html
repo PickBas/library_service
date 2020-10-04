@@ -23,7 +23,7 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td><a href="{% url 'book_page' book.id %}">{{ book.name }}</a></td>
-                            <td>{% if book.is_in_use %}Не доступна{% else %}Доступна{% endif %}</td>
+                            <td>{% if book.in_use_by %}Не доступна{% else %}Доступна{% endif %}</td>
                             <td>{{ book.upload_time|time:"G:i" }}, {{ book.upload_time|date:"d/m/Y" }}</td>
                         </tr>
                     {% endfor %}

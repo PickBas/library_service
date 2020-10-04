@@ -1,8 +1,16 @@
 """book tests.py"""
+from datetime import datetime
+
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, Client
 from django.urls import reverse
+
+from book.forms import GiveBookForm
+
+IDS = {
+    'librarian_id': 1,
+    'student_id': 2
+}
 
 
 class LibraryViewTest(TestCase):
@@ -15,7 +23,7 @@ class LibraryViewTest(TestCase):
 
         super().setUp()
         self.client = Client()
-        self.current_user = User.objects.get(id=1)
+        self.current_user = User.objects.get(id=IDS['librarian_id'])
         self.client.force_login(user=self.current_user)
 
     def test_page_loads(self) -> None:
@@ -36,7 +44,7 @@ class BookTest(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(id=2)
+        self.current_user = User.objects.get(id=IDS['librarian_id'])
         self.client.force_login(user=self.current_user)
 
     def test_add_book_page_loads(self) -> None:
@@ -68,12 +76,41 @@ class StudentsListTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(id=2)
+        self.current_user = User.objects.get(id=IDS['librarian_id'])
         self.client.force_login(user=self.current_user)
 
     def test_student_list_page_loads(self) -> None:
         """Testing if the students list page loads"""
 
         response = self.client.get(reverse('all_students_page'))
+
+        self.assertEquals(200, response.status_code)
+
+
+class GiveBookTestCase(TestCase):
+    """GiveBookTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        super().setUp()
+
+        self.client = Client()
+        self.current_user = User.objects.get(id=IDS['librarian_id'])
+        self.client.force_login(user=self.current_user)
+
+    def test_book_giving_page_loads(self) -> None:
+        """Testing page load"""
+
+        data = {
+            'name': 'test2',
+            'info': 'info about the book2'
+        }
+
+        self.client.post(reverse('add_book_to_lib'), data)
+
+        response = self.client.get(reverse('give_book_page', kwargs={'pk': 2}))
 
         self.assertEquals(200, response.status_code)

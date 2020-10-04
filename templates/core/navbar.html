@@ -4,13 +4,13 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        {% if user.profile.is_librarian %}
-            <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-auto">
+            {% if user.profile.is_librarian %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'all_students_page' %}">Ученики</a>
                 </li>
-            </ul>
-        {% endif %}
+            {% endif %}
+        </ul>
         {% if user.is_authenticated %}
             <ul class="navbar-nav ml-auto nav-flex-icons my-0">
                 <li class="nav-item avatar dropdown">
