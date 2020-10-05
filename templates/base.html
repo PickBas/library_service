@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         {% block extra__css %} {% endblock %}
+        {% load static %}
+        <link rel="shortcut icon" href="{% static 'favicon.png' %}" type="image/png">
         <title>{% block page_name_block %}{{ page_name }}{% endblock %}</title>
     </head>
     <body>
