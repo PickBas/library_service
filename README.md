@@ -1,9 +1,9 @@
 ![Test-CI](https://github.com/2048-IT-Engineers/library_service/workflows/Test-CI/badge.svg)
 ![Pylint-CI](https://github.com/2048-IT-Engineers/library_service/workflows/Pylint-CI/badge.svg)
 
-# Library service
+![logo](https://github.com/PickBas/library_service/blob/master/assets/fifsmallerlogo.png?raw=true)
 
-## Запуск проекта
+# Запуск проекта
 ### 1. Используя [Docker](https://www.docker.com/)
 Откройте командную строку в папке с проектом, далее введите команду:
 
