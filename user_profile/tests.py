@@ -115,7 +115,7 @@ class ProfileEditTest(TestCase):
         """Setting up ProfileEditTest"""
         super().setUp()
         self.client = Client()
-        self.current_user = User.objects.get(id=1)
+        self.current_user = User.objects.get(username='FirstUserTestStudent')
         self.client.force_login(user=self.current_user)
 
     def test_forms(self) -> None:
@@ -145,8 +145,9 @@ class ProfileEditTest(TestCase):
         form_user_update_data = {'first_name': 'test', 'last_name': 'usertest'}
 
         response = self.client.post(reverse('update_profile_info'), {
-                                        **form_user_update_data,
-                                    })
+            **form_user_update_data,
+        })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(User.objects.get(id=1).last_name, form_user_update_data['last_name'])
+        self.assertEqual(User.objects.get(username='FirstUserTestStudent').last_name,
+                         form_user_update_data['last_name'])

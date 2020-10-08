@@ -1,17 +1,10 @@
 """book tests.py"""
-from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from book.forms import GiveBookForm
 from book.models import Book
-
-IDS = {
-    'librarian_id': 2,
-    'student_id': 1
-}
 
 
 class LibraryViewTest(TestCase):
@@ -24,7 +17,7 @@ class LibraryViewTest(TestCase):
 
         super().setUp()
         self.client = Client()
-        self.current_user = User.objects.get(id=IDS['librarian_id'])
+        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
         self.client.force_login(user=self.current_user)
 
     def test_page_loads(self) -> None:
@@ -45,7 +38,7 @@ class BookTest(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(id=IDS['librarian_id'])
+        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
         self.client.force_login(user=self.current_user)
 
     def test_add_book_page_loads(self) -> None:
@@ -77,7 +70,7 @@ class StudentsListTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(id=IDS['librarian_id'])
+        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
         self.client.force_login(user=self.current_user)
 
     def test_student_list_page_loads(self) -> None:
@@ -99,7 +92,7 @@ class GiveBookTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(id=IDS['librarian_id'])
+        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
         self.client.force_login(user=self.current_user)
 
     def test_book_giving_page_loads(self) -> None:
@@ -130,7 +123,7 @@ class UpdateBookTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(id=IDS['librarian_id'])
+        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
         self.client.force_login(user=self.current_user)
 
         data = {
@@ -152,7 +145,7 @@ class UpdateBookTestCase(TestCase):
         """Testing if edit_book_page raises 404 for students"""
 
         client = Client()
-        client.force_login(user=User.objects.get(id=IDS['student_id']))
+        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
 
         response = client.get(reverse('edit_book_page',
                                       kwargs={'pk': self.current_book.id}))
@@ -179,7 +172,7 @@ class UpdateBookTestCase(TestCase):
         """Testing if it's possible to edit a book for a student"""
 
         client = Client()
-        client.force_login(user=User.objects.get(id=IDS['student_id']))
+        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
 
         data = {
             'name': 'testUpdateBook',
