@@ -1,4 +1,6 @@
 """user_profile models.py"""
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -85,3 +87,18 @@ class Profile(models.Model):
         """
 
         return 'Выдано книг: ' + str(len(self.given_books_all_times.all()))
+
+    def get_given_books_today(self) -> list:
+        """
+        Getting all the books given today
+
+        :returns: list
+        """
+
+        books_given_today = list()
+
+        for book in self.given_books_all_times.all():
+            if book.since_given.day == datetime.today().day:
+                books_given_today.append(book)
+
+        return books_given_today
