@@ -48,7 +48,7 @@ class Profile(models.Model):
         :returns: role (str)
         """
 
-        if self.is_sys_admin:
+        if self.user.is_superuser:
             return 'Администатор'
         if self.is_librarian:
             return 'Библиотекарь'
