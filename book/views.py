@@ -87,6 +87,7 @@ class BookPageView(View):
     def __init__(self, **kwargs: dict):
         self.template_name = 'book/book_main_page.html'
         self.context = {}
+        self.current_book = None
         super().__init__(**kwargs)
 
     def get(self, request: HttpRequest, **kwargs: dict) -> render:
@@ -107,35 +108,35 @@ class BookPageView(View):
 
     def post(self, request: HttpRequest, **kwargs: dict):
         """
-        Processing POST request. Giving a book back.
+        Processing POST request. Retrieving a book.
 
         :param request: HttpRequest
         :param kwargs: pk
         :returns: redirect
         """
 
-        current_book = get_object_or_404(Book, id=kwargs['pk'])
+        self.current_book = get_object_or_404(Book, id=kwargs['pk'])
 
-        from_student = current_book.in_use_by
+        from_student = self.current_book.in_use_by
 
-        from_student.profile.books_in_use.remove(current_book)
+        from_student.profile.books_in_use.remove(self.current_book)
 
-        if current_book.when_should_be_back > timezone.now() and \
-                current_book not in from_student.profile.overdue_books.all():
-            from_student.profile.overdue_books.add(current_book)
+        if self.current_book.when_should_be_back < timezone.now() and \
+                self.current_book not in from_student.profile.overdue_books.all():
+            from_student.profile.overdue_books.add(self.current_book)
 
         from_student.save()
 
-        current_book.in_use_by = None
-        current_book.when_should_be_back = timezone.now()
-        current_book.since_back = timezone.now()
+        self.current_book.in_use_by = None
+        self.current_book.when_should_be_back = timezone.now()
+        self.current_book.since_back = timezone.now()
 
-        if from_student not in current_book.read_history.all():
-            current_book.read_history.add(from_student)
+        if from_student not in self.current_book.read_history.all():
+            self.current_book.read_history.add(from_student)
 
-        current_book.save()
+        self.current_book.save()
 
-        return redirect(reverse('book_page', kwargs={'pk': current_book.id}))
+        return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
 
 
 class GiveBookPageView(View):

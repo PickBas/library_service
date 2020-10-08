@@ -3,7 +3,7 @@
 {% block main %}
 
 
-    <h1>Список книг:</h1>
+    <h1 class="text-center">Книги</h1>
     {% if user.profile.is_librarian %}
         <a class="btn btn-primary" href="{% url 'add_book_to_lib' %}">Добавить книгу</a>
     {% endif %}
