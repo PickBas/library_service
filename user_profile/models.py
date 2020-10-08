@@ -8,16 +8,9 @@ from book.models import Book
 class Profile(models.Model):
     """Profile class"""
 
-    GENDER_CHOICES = (
-        ('M', 'Мужчина'),
-        ('F', 'Женщина'),
-        (None, 'Не указано')
-    )
-
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     is_librarian = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
-    is_sys_admin = models.BooleanField(default=False)
 
     base_image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')
     image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')

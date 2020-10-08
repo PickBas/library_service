@@ -3,43 +3,7 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$216000$MOBOs7eSjUDe$Ebfq7RYaLhvWGFN44L53Oei3W6zi9ykjaNJJBTh9o9g=",
-    "last_login": "2020-10-04T07:43:35.131Z",
-    "is_superuser": false,
-    "username": "librarian",
-    "first_name": "librarian",
-    "last_name": "librarian",
-    "email": "librarian@librarian.librarian",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2020-10-04T07:43:09.350Z",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "auth.user",
-  "pk": 2,
-  "fields": {
-    "password": "pbkdf2_sha256$216000$QcF129MFdAPN$n+UaUTketJe/Q9Yr1VPs9LGscNG34fosX44OopIBDqg=",
-    "last_login": null,
-    "is_superuser": false,
-    "username": "first_student",
-    "first_name": "first_student",
-    "last_name": "first_student",
-    "email": "first_student@first_student.first_student",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2020-10-04T07:43:09.514Z",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "auth.user",
-  "pk": 3,
-  "fields": {
-    "password": "pbkdf2_sha256$216000$i3tvV3exFJgC$dB1cut3frOJ/ZSAxFvy9biEIOsRoSMLNHjhT085DnN0=",
+    "password": "pbkdf2_sha256$216000$gyhlv0zzQn73$Al5pYWgKCJHr8zSFAhwr3msIMR6hkqnZviBeLj+iEw4=",
     "last_login": null,
     "is_superuser": false,
     "username": "FirstUserTestStudent",
@@ -48,16 +12,16 @@
     "email": "FirstUserTest@firstusertest.firstusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-10-04T08:09:30.632Z",
+    "date_joined": "2020-10-08T04:58:02.666Z",
     "groups": [],
     "user_permissions": []
   }
 },
 {
   "model": "auth.user",
-  "pk": 4,
+  "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$216000$hHFoF10ScBx4$zOi0R8xwtiQ4ZY0KmzmPrxM0gD8MAyPZ0/JRulyk97s=",
+    "password": "pbkdf2_sha256$216000$cRmIudIWRrZp$BmTCt8TU8AJ4uTJDWbZBFUrjp6njkq7aP8Dr8TU4vuM=",
     "last_login": null,
     "is_superuser": false,
     "username": "SecondUserTestLibrarian",
@@ -66,17 +30,9 @@
     "email": "SecondUserTest@secondusertest.secondusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-10-04T08:09:30.794Z",
+    "date_joined": "2020-10-08T04:58:02.812Z",
     "groups": [],
     "user_permissions": []
-  }
-},
-{
-  "model": "sessions.session",
-  "pk": "wwo37wsp4ybkydw4b8ladcjwtty40zas",
-  "fields": {
-    "session_data": ".eJxVjEEOgjAQRe_StWloKTCwdO8ZmmlnKlXTEgqJxnh3IWGh2_fe_29hcV1GuxaebSQxCCVOv8yhv3PaBd0wXbP0OS1zdHJP5GGLvGTix_lo_w5GLOO2dpUODRgDoKjvQtW5BltStWPjgHoIIbQbZ2NYadLoFfitZA5eY61gPy1cSszJ8nOK80sM1ecLm9I_tA:1kOygB:jgHX6xTcw6aEwNVA8Qi1G0OCMMss1OwuhiXiZEvycEs",
-    "expire_date": "2020-10-18T07:43:35.139Z"
   }
 },
 {
@@ -92,19 +48,14 @@
   "pk": 1,
   "fields": {
     "user": 2,
-    "is_librarian": false,
-    "is_student": true,
-    "is_sys_admin": false,
+    "is_librarian": true,
+    "is_student": false,
     "base_image": "avatars/0.jpg",
     "image": "avatars/0.jpg",
     "birth": null,
-    "overdue_books": [
-      1
-    ],
+    "overdue_books": [],
     "given_books_all_times": [],
-    "books_in_use": [
-      1
-    ]
+    "books_in_use": []
   }
 },
 {
@@ -112,65 +63,14 @@
   "pk": 2,
   "fields": {
     "user": 1,
-    "is_librarian": true,
-    "is_student": false,
-    "is_sys_admin": false,
-    "base_image": "avatars/0.jpg",
-    "image": "avatars/0.jpg",
-    "birth": null,
-    "overdue_books": [],
-    "given_books_all_times": [
-      1
-    ],
-    "books_in_use": []
-  }
-},
-{
-  "model": "user_profile.profile",
-  "pk": 3,
-  "fields": {
-    "user": 4,
-    "is_librarian": true,
-    "is_student": false,
-    "is_sys_admin": false,
-    "base_image": "avatars/0.jpg",
-    "image": "avatars/0.jpg",
-    "birth": null,
-    "overdue_books": [],
-    "given_books_all_times": [],
-    "books_in_use": []
-  }
-},
-{
-  "model": "user_profile.profile",
-  "pk": 4,
-  "fields": {
-    "user": 3,
     "is_librarian": false,
     "is_student": true,
-    "is_sys_admin": false,
     "base_image": "avatars/0.jpg",
     "image": "avatars/0.jpg",
     "birth": null,
     "overdue_books": [],
     "given_books_all_times": [],
     "books_in_use": []
-  }
-},
-{
-  "model": "book.book",
-  "pk": 1,
-  "fields": {
-    "name": "Clean Code",
-    "info": "The best book you can ever find in the world",
-    "in_use_by": 2,
-    "since_given": "2020-10-04T07:44:08.082Z",
-    "since_back": "2020-10-04T07:56:57.215Z",
-    "upload_time": "2020-10-04T07:44:08.082Z",
-    "when_should_be_back": "2020-10-26T00:00:00Z",
-    "read_history": [
-      2
-    ]
   }
 }
 ]

@@ -23,7 +23,7 @@ class LoginTest(TestCase):
         """Testing if login page loads"""
 
         response = self.client.get(reverse("account_login"))
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_login_with_wrong_credentials(self) -> None:
         """Testing if
@@ -37,7 +37,7 @@ class LoginTest(TestCase):
 
         response = self.client.post(reverse('account_login'),
                                     data=data_to_send)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_login_with_valid_credentials(self) -> None:
         """Testing if
@@ -51,7 +51,7 @@ class LoginTest(TestCase):
 
         response = self.client.post(reverse('account_login'),
                                     data=data_to_send, follow=True)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
         self.assertIn(('/', 302), response.redirect_chain)
 
 
@@ -70,7 +70,7 @@ class RegistrationTest(TestCase):
         """Testing if sign up page loads"""
 
         response = self.client.get(reverse('account_signup'))
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_registering(self) -> None:
         """Testing if it is possible to register"""
@@ -86,7 +86,7 @@ class RegistrationTest(TestCase):
 
         response = self.client.post(reverse('account_signup'),
                                     data=data_to_send, follow=True)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
         self.assertIn(('/', 302), response.redirect_chain)
 
     def test_registering_with_existent_credentials(self) -> None:
@@ -102,7 +102,7 @@ class RegistrationTest(TestCase):
 
         response = self.client.post(reverse('account_signup'),
                                     data=data_to_send, follow=True)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
         self.assertNotIn(('/', 302), response.redirect_chain)
 
 

@@ -4,7 +4,7 @@
 
 
     <h1>Список книг:</h1>
-    {% if user.profile.is_librarian or user.profile.is_sys_admin %}
+    {% if user.profile.is_librarian %}
         <a class="btn btn-primary" href="{% url 'add_book_to_lib' %}">Добавить книгу</a>
     {% endif %}
     <div class="row mt-3">

@@ -6,10 +6,11 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from book.forms import GiveBookForm
+from book.models import Book
 
 IDS = {
-    'librarian_id': 1,
-    'student_id': 2
+    'librarian_id': 2,
+    'student_id': 1
 }
 
 
@@ -30,7 +31,7 @@ class LibraryViewTest(TestCase):
         """Testing if library page loads"""
 
         response = self.client.get(reverse("index_page"))
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
 
 class BookTest(TestCase):
@@ -51,7 +52,7 @@ class BookTest(TestCase):
         """Testing if add_book_to_lib page loads"""
 
         response = self.client.get(reverse('add_book_to_lib'))
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_book_upload(self) -> None:
         """Testing if it is possible to upload a book"""
@@ -62,7 +63,7 @@ class BookTest(TestCase):
         }
 
         response = self.client.post(reverse('add_book_to_lib'), data)
-        self.assertEquals(302, response.status_code)
+        self.assertEqual(302, response.status_code)
 
 
 class StudentsListTestCase(TestCase):
@@ -84,7 +85,7 @@ class StudentsListTestCase(TestCase):
 
         response = self.client.get(reverse('all_students_page'))
 
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
 
 class GiveBookTestCase(TestCase):
@@ -111,6 +112,8 @@ class GiveBookTestCase(TestCase):
 
         self.client.post(reverse('add_book_to_lib'), data)
 
-        response = self.client.get(reverse('give_book_page', kwargs={'pk': 2}))
+        current_book = Book.objects.get(name='test2')
 
-        self.assertEquals(200, response.status_code)
+        response = self.client.get(reverse('give_book_page', kwargs={'pk': current_book.id}))
+
+        self.assertEqual(200, response.status_code)
