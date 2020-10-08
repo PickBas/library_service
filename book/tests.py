@@ -117,3 +117,76 @@ class GiveBookTestCase(TestCase):
         response = self.client.get(reverse('give_book_page', kwargs={'pk': current_book.id}))
 
         self.assertEqual(200, response.status_code)
+
+
+class UpdateBookTestCase(TestCase):
+    """UpdateBookTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        super().setUp()
+
+        self.client = Client()
+        self.current_user = User.objects.get(id=IDS['librarian_id'])
+        self.client.force_login(user=self.current_user)
+
+        data = {
+            'name': 'testUpdateBook',
+            'info': 'info about the book'
+        }
+
+        self.client.post(reverse('add_book_to_lib'), data)
+        self.current_book = Book.objects.get(name='testUpdateBook')
+
+    def test_update_book_page_loads(self) -> None:
+        """Testing if edit_book_page loads"""
+
+        response = self.client.get(reverse('edit_book_page',
+                                           kwargs={'pk': self.current_book.id}))
+        self.assertEqual(200, response.status_code)
+
+    def test_update_page_loads_for_students(self) -> None:
+        """Testing if edit_book_page raises 404 for students"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(id=IDS['student_id']))
+
+        response = client.get(reverse('edit_book_page',
+                                      kwargs={'pk': self.current_book.id}))
+        self.assertEqual(404, response.status_code)
+
+    def test_update_book(self) -> None:
+        """Testing if it's possible to edit the book's information"""
+
+        data = {
+            'name': 'testUpdateBook',
+            'info': 'updated information'
+        }
+
+        response = self.client.post(reverse('edit_book_page',
+                                            kwargs={'pk': self.current_book.id}),
+                                    data)
+
+        book = Book.objects.get(id=self.current_book.id)
+
+        self.assertEqual(302, response.status_code)
+        self.assertEqual('updated information', book.info)
+
+    def test_update_book_from_student(self) -> None:
+        """Testing if it's possible to edit a book for a student"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(id=IDS['student_id']))
+
+        data = {
+            'name': 'testUpdateBook',
+            'info': 'updated information'
+        }
+
+        response = client.post(reverse('edit_book_page',
+                                       kwargs={'pk': self.current_book.id}),
+                               data)
+        self.assertEqual(404, response.status_code)
