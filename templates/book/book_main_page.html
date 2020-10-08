@@ -25,7 +25,10 @@
     </div>
 
     {% if user.profile.is_librarian and not current_book.in_use_by %}
-        <a class="btn btn-primary btn-lg btn-block mt-3" href="{% url 'give_book_page' current_book.id %}">Выписать</a>
+        <div class="row">
+            <div class="col"><a class="btn btn-primary btn-lg btn-block mt-3" href="{% url 'give_book_page' current_book.id %}">Выписать</a></div>
+            <div class="col"><a class="btn btn-secondary btn-lg btn-block mt-3" href="{% url 'edit_book_page' current_book.id %}">Редактировать</a></div>
+        </div>
     {% elif user.profile.is_librarian and current_book.in_use_by %}
         <form method="post" action="{% url 'book_page' current_book.id %}">
             {% csrf_token %}

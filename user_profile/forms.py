@@ -96,9 +96,7 @@ class CustomSignupForm(SignupForm):
 
         profile = Profile(user=user)
 
-        if invite_key == settings.ADMIN_KEY:
-            profile.is_sys_admin = True
-        elif invite_key == settings.LIBRARIAN_KEY:
+        if invite_key == settings.LIBRARIAN_KEY:
             profile.is_librarian = True
         else:
             profile.is_student = True

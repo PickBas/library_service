@@ -47,24 +47,6 @@ except FileNotFoundError:
 # Invite key generator for librarians and admins
 CHARS_STUFF = 'abcdefghijklmnopqrstuvwxyz0123456789'
 
-ADMIN_KEY = ''
-
-try:
-    admin_key_file = open('.admin_key.txt', 'r')
-    key_tmp = admin_key_file.readline()
-    if len(key_tmp) == 10:
-        ADMIN_KEY = key_tmp
-        admin_key_file.close()
-    else:
-        admin_key_file.close()
-        os.remove('.admin_key.txt')
-        raise FileNotFoundError
-except FileNotFoundError:
-    ADMIN_KEY = get_random_string(10, CHARS_STUFF)
-    admin_key_file = open('.admin_key.txt', 'x')
-    admin_key_file.write(ADMIN_KEY)
-    admin_key_file.close()
-
 LIBRARIAN_KEY = ''
 
 try:

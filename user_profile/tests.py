@@ -1,10 +1,13 @@
 """user_profile tests.py"""
+import os
 from datetime import datetime
 
+from PIL import Image
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from library_service.settings import BASE_DIR
 from user_profile.forms import UserUpdateForm, ProfileUpdateForm
 
 
@@ -23,7 +26,7 @@ class LoginTest(TestCase):
         """Testing if login page loads"""
 
         response = self.client.get(reverse("account_login"))
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_login_with_wrong_credentials(self) -> None:
         """Testing if
@@ -37,7 +40,7 @@ class LoginTest(TestCase):
 
         response = self.client.post(reverse('account_login'),
                                     data=data_to_send)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_login_with_valid_credentials(self) -> None:
         """Testing if
@@ -51,7 +54,7 @@ class LoginTest(TestCase):
 
         response = self.client.post(reverse('account_login'),
                                     data=data_to_send, follow=True)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
         self.assertIn(('/', 302), response.redirect_chain)
 
 
@@ -70,7 +73,7 @@ class RegistrationTest(TestCase):
         """Testing if sign up page loads"""
 
         response = self.client.get(reverse('account_signup'))
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_registering(self) -> None:
         """Testing if it is possible to register"""
@@ -86,7 +89,7 @@ class RegistrationTest(TestCase):
 
         response = self.client.post(reverse('account_signup'),
                                     data=data_to_send, follow=True)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
         self.assertIn(('/', 302), response.redirect_chain)
 
     def test_registering_with_existent_credentials(self) -> None:
@@ -102,7 +105,7 @@ class RegistrationTest(TestCase):
 
         response = self.client.post(reverse('account_signup'),
                                     data=data_to_send, follow=True)
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
         self.assertNotIn(('/', 302), response.redirect_chain)
 
 
@@ -115,7 +118,7 @@ class ProfileEditTest(TestCase):
         """Setting up ProfileEditTest"""
         super().setUp()
         self.client = Client()
-        self.current_user = User.objects.get(id=1)
+        self.current_user = User.objects.get(username='FirstUserTestStudent')
         self.client.force_login(user=self.current_user)
 
     def test_forms(self) -> None:
@@ -145,8 +148,38 @@ class ProfileEditTest(TestCase):
         form_user_update_data = {'first_name': 'test', 'last_name': 'usertest'}
 
         response = self.client.post(reverse('update_profile_info'), {
-                                        **form_user_update_data,
-                                    })
+            **form_user_update_data,
+        })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(User.objects.get(id=1).last_name, form_user_update_data['last_name'])
+        self.assertEqual(User.objects.get(username='FirstUserTestStudent').last_name,
+                         form_user_update_data['last_name'])
+
+    def test_avatar_upload(self) -> None:
+        """Testing if it's possible to upload an avatar"""
+
+        x_position = 0
+        y_position = 0
+        width = 1915
+        height = 1915
+
+        photo = Image.open(os.path.join(BASE_DIR, 'media/avatars/0.jpg'))
+
+        to_send_image = {
+            'base_image': photo,
+        }
+
+        to_send_cropper = {
+            'x': x_position,
+            'y': y_position,
+            'width': width,
+            'height': height,
+        }
+
+        response = self.client.post(reverse('update_profile_avatar'), {
+            **to_send_image,
+            **to_send_cropper,
+
+        })
+
+        self.assertEqual(response.status_code, 302)

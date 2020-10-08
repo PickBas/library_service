@@ -14,14 +14,20 @@
                     {{ current_user.profile.get_full_name }}
                 </div>
                 <div class="col text-center">
-                    Книги: {{ current_user.profile.books_in_use.all|length }}
+                    {% if current_user.profile.is_librarian %}
+                        {{ current_user.profile.get_given_books_all_times_info }}
+                    {% else %}
+                        {{ current_user.profile.get_books_in_use_info }}
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
     {% if user == current_user %}
-        <a class="btn btn-primary btn-lg btn-block mt-2" href="{% url 'update_profile_info' %}">Обновить профиль</a>
-        <a class="btn btn-secondary btn-lg btn-block mt-2" href="{% url 'update_profile_avatar' %}">Обновить фото</a>
+        <div class="row">
+            <div class="col"><a class="btn btn-primary btn-lg btn-block mt-2" href="{% url 'update_profile_info' %}">Редактировать профиль</a></div>
+            <div class="col"><a class="btn btn-secondary btn-lg btn-block mt-2" href="{% url 'update_profile_avatar' %}">Обновить фото</a></div>
+        </div>
     {% endif %}
 
     {% if current_user.profile.books_in_use.all %}
@@ -32,7 +38,6 @@
                         <tr>
                             <th scope="col">№</th>
                             <th scope="col">Название</th>
-                            <th scope="col">Статус</th>
                             <th scope="col">Вернуть</th>
                         </tr>
                     </thead>
@@ -41,7 +46,60 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td><a href="{% url 'book_page' book.id %}">{{ book.name }}</a></td>
-                                <td>{% if book.in_use_by %}Не доступна{% else %}Доступна{% endif %}</td>
+                                <td>{{ book.when_should_be_back|date:"d/m/Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if current_user.profile.get_given_books_today %}
+        <h1 class="text-center mt-5">Сегодня</h1>
+        <div class="row mt-3">
+            <div class="col">
+                <table class="table text-center table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Возврат</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in current_user.profile.get_given_books_today %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><a href="{% url 'book_page' book.id %}">{{ book.name }}</a></td>
+                                <td>{{ book.when_should_be_back|date:"d/m/Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if current_user.profile.given_books_all_times.all %}
+        <h1 class="text-center mt-5">Все время</h1>
+        <div class="row mt-3">
+            <div class="col">
+                <table class="table text-center table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Выдано</th>
+                            <th scope="col">Возврат</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in current_user.profile.given_books_all_times.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><a href="{% url 'book_page' book.id %}">{{ book.name }}</a></td>
+                                <td>{{ book.since_given|date:"d/m/Y" }}</td>
                                 <td>{{ book.when_should_be_back|date:"d/m/Y" }}</td>
                             </tr>
                         {% endfor %}

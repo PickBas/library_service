@@ -9,10 +9,10 @@ class Book(models.Model):
 
     name = models.CharField(max_length=100, blank=True, null=True)
     info = models.CharField(max_length=500, blank=True, null=True)
-    in_use_by = models.OneToOneField(to=User,
-                                     on_delete=models.CASCADE,
-                                     related_name='current_book_user',
-                                     null=True)
+    in_use_by = models.ForeignKey(to=User,
+                                  on_delete=models.CASCADE,
+                                  related_name='current_book_user',
+                                  null=True)
 
     read_history = models.ManyToManyField(User)
 

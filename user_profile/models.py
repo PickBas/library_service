@@ -1,4 +1,6 @@
 """user_profile models.py"""
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -8,26 +10,21 @@ from book.models import Book
 class Profile(models.Model):
     """Profile class"""
 
-    GENDER_CHOICES = (
-        ('M', 'Мужчина'),
-        ('F', 'Женщина'),
-        (None, 'Не указано')
-    )
-
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     is_librarian = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
-    is_sys_admin = models.BooleanField(default=False)
 
     base_image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')
     image = models.ImageField(upload_to='avatars/', default='avatars/0.jpg')
 
     birth = models.DateField(null=True)
-    overdue_books = models.ManyToManyField(Book, related_name='overdue_books')
 
+    # Librarian's fields
     given_books_all_times = models.ManyToManyField(Book, related_name='given_books')
 
+    # Student's field
     books_in_use = models.ManyToManyField(Book, related_name='books_in_use')
+    overdue_books = models.ManyToManyField(Book, related_name='overdue_books')
 
     def get_full_name(self) -> str:
         """
@@ -55,7 +52,7 @@ class Profile(models.Model):
         :returns: role (str)
         """
 
-        if self.is_sys_admin:
+        if self.user.is_superuser:
             return 'Администатор'
         if self.is_librarian:
             return 'Библиотекарь'
@@ -70,3 +67,38 @@ class Profile(models.Model):
         """
 
         return Book.objects.get(id=book_id) in self.overdue_books.all()
+
+    def get_books_in_use_info(self) -> str:
+        """
+        Getting amount of books in use
+            for displaying it on the profile page (for students)
+
+        :returns: str
+        """
+
+        return 'Книги: ' + str(len(self.books_in_use.all()))
+
+    def get_given_books_all_times_info(self) -> str:
+        """
+        Getting amount of all the books a librarian gave to students
+            (for librarians)
+
+        :returns: str
+        """
+
+        return 'Выдано книг: ' + str(len(self.given_books_all_times.all()))
+
+    def get_given_books_today(self) -> list:
+        """
+        Getting all the books given today
+
+        :returns: list
+        """
+
+        books_given_today = list()
+
+        for book in self.given_books_all_times.all():
+            if book.since_given.day == datetime.today().day:
+                books_given_today.append(book)
+
+        return books_given_today
