@@ -1,10 +1,14 @@
 """user_profile tests.py"""
+import os
 from datetime import datetime
 
+from PIL import Image
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from library_service.settings import BASE_DIR
 from user_profile.forms import UserUpdateForm, ProfileUpdateForm
 
 
@@ -151,3 +155,32 @@ class ProfileEditTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(User.objects.get(username='FirstUserTestStudent').last_name,
                          form_user_update_data['last_name'])
+
+    def test_avatar_upload(self) -> None:
+        """Testing if it's possible to upload an avatar"""
+
+        x_position = 0
+        y_position = 0
+        width = 1915
+        height = 1915
+
+        photo = Image.open(os.path.join(BASE_DIR, 'media/avatars/0.jpg'))
+
+        to_send_image = {
+            'base_image': photo,
+        }
+
+        to_send_cropper = {
+            'x': x_position,
+            'y': y_position,
+            'width': width,
+            'height': height,
+        }
+
+        response = self.client.post(reverse('update_profile_avatar'), {
+            **to_send_image,
+            **to_send_cropper,
+
+        })
+
+        self.assertEqual(response.status_code, 302)
