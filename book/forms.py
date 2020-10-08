@@ -19,7 +19,7 @@ class UploadBookForm(forms.Form):
 class EditBookForm(forms.ModelForm):
     """EditBookForm form"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: tuple, **kwargs: dict):
         super().__init__(*args, **kwargs)
 
         for key in self.fields:

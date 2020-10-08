@@ -264,8 +264,8 @@ class EditBookPageView(View):
 
         if book_edit_form.is_valid():
 
-            if not len(book_edit_form.cleaned_data.get('name'))\
-                    and not len(book_edit_form.cleaned_data.get('info')):
+            if not len(book_edit_form.cleaned_data.get('name')) > 0 \
+                    and not len(book_edit_form.cleaned_data.get('info')) > 0:
                 return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
 
             self.current_book.name = book_edit_form.cleaned_data.get('name')
