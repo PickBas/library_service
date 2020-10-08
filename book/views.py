@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views import View
 
 from book.models import Book
-from book.forms import UploadBookForm, GiveBookForm
+from book.forms import UploadBookForm, GiveBookForm, EditBookForm
 
 
 class StudentsPageView(View):
@@ -209,5 +209,66 @@ class GiveBookPageView(View):
                 librarian.save()
 
             return redirect(reverse('index_page'))
+
+        return self.get(request, **kwargs)
+
+
+class EditBookPageView(View):
+    """EditBookPageView class"""
+
+    def __init__(self, **kwargs: dict):
+        self.template_name = 'book/edit_book.html'
+        self.context = {'page_name': 'Редактирование книги'}
+        self.current_book = None
+        super().__init__(**kwargs)
+
+    def get(self, request: HttpRequest, **kwargs: dict) -> render:
+        """
+        Processing GET request
+
+        :param request: HttpRequest
+        :param kwargs: pk
+        :returns: render
+        :raises: 404
+        """
+
+        if not request.user.profile.is_librarian:
+            raise Http404()
+
+        self.current_book = Book.objects.get(id=kwargs['pk'])
+        book_edit_form = EditBookForm(instance=self.current_book)
+
+        self.context['current_book'] = self.current_book
+        self.context['form'] = book_edit_form
+
+        return render(request, self.template_name, self.context)
+
+    def post(self, request: HttpRequest, **kwargs: dict):
+        """
+        Processing POST request
+
+        :param request: HttpRequest
+        :param kwargs: pk
+        :returns: render, redirect
+        :raises: 404
+        """
+
+        if not request.user.profile.is_librarian:
+            raise Http404()
+
+        self.current_book = Book.objects.get(id=kwargs['pk'])
+        book_edit_form = EditBookForm(request.POST, instance=self.current_book)
+
+        if book_edit_form.is_valid():
+
+            if not len(book_edit_form.cleaned_data.get('name'))\
+                    and not len(book_edit_form.cleaned_data.get('info')):
+                return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
+
+            self.current_book.name = book_edit_form.cleaned_data.get('name')
+            self.current_book.info = book_edit_form.cleaned_data.get('info')
+
+            self.current_book.save()
+            return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
 
         return self.get(request, **kwargs)

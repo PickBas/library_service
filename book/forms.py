@@ -2,6 +2,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from book.models import Book
+
 
 class UploadBookForm(forms.Form):
     """UploadBookForm form"""
@@ -12,6 +14,27 @@ class UploadBookForm(forms.Form):
     info = forms.CharField(max_length=500,
                            label='Информация о книге',
                            widget=forms.Textarea())
+
+
+class EditBookForm(forms.ModelForm):
+    """EditBookForm form"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for key in self.fields:
+            self.fields[key].required = False
+
+    class Meta:
+        model = Book
+        fields = ('name', 'info')
+        widgets = {
+            'info': forms.Textarea(),
+        }
+        labels = {
+            'name': 'название',
+            'info': 'Информация о книге',
+        }
 
 
 class GiveBookForm(forms.Form):
