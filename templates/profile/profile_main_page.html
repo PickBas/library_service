@@ -55,4 +55,31 @@
             </div>
         </div>
     {% endif %}
+
+    {% if current_user.profile.given_books_all_times.all %}
+        <div class="row mt-5">
+            <div class="col">
+                <table class="table text-center table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Выдано</th>
+                            <th scope="col">Возврат</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in current_user.profile.given_books_all_times.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td><a href="{% url 'book_page' book.id %}">{{ book.name }}</a></td>
+                                <td>{{ book.since_given|date:"d/m/Y" }}</td>
+                                <td>{{ book.when_should_be_back|date:"d/m/Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

@@ -1,7 +1,7 @@
 """book views.py"""
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponseBadRequest, Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -108,7 +108,8 @@ class BookPageView(View):
 
     def post(self, request: HttpRequest, **kwargs: dict):
         """
-        Processing POST request. Retrieving a book.
+        Processing POST request
+            Retrieving a book
 
         :param request: HttpRequest
         :param kwargs: pk
@@ -190,16 +191,22 @@ class GiveBookPageView(View):
             current_book.when_should_be_back = book_form.cleaned_data.get('date_back')
 
             to_student = User.objects.get(id=book_form.cleaned_data.get('student').id)
-            to_student.profile.books_in_use.add(current_book)
 
+            if current_book in to_student.profile.books_in_use.all():
+                raise Http404()
+
+            to_student.profile.books_in_use.add(current_book)
             to_student.save()
 
-            current_book.read_history.add(to_student)
+            if to_student not in current_book.read_history.all():
+                current_book.read_history.add(to_student)
+
             current_book.in_use_by = to_student
             current_book.save()
 
-            librarian.profile.given_books_all_times.add(current_book)
-            librarian.save()
+            if current_book not in librarian.profile.given_books_all_times.all():
+                librarian.profile.given_books_all_times.add(current_book)
+                librarian.save()
 
             return redirect(reverse('index_page'))
 
