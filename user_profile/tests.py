@@ -4,7 +4,6 @@ from datetime import datetime
 
 from PIL import Image
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, Client
 from django.urls import reverse
 

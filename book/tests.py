@@ -80,6 +80,16 @@ class StudentsListTestCase(TestCase):
 
         self.assertEqual(200, response.status_code)
 
+    def test_student_list_page_loads_for_students(self) -> None:
+        """Testing if the students list page loads"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
+
+        response = client.get(reverse('all_students_page'))
+
+        self.assertEqual(403, response.status_code)
+
 
 class GiveBookTestCase(TestCase):
     """GiveBookTestCase class"""

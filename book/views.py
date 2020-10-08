@@ -1,14 +1,14 @@
 """book views.py"""
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponseBadRequest, Http404
+from django.http import HttpRequest, Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 
-from book.models import Book
 from book.forms import UploadBookForm, GiveBookForm, EditBookForm
+from book.models import Book
 
 
 class StudentsPageView(View):
@@ -26,6 +26,9 @@ class StudentsPageView(View):
         :param request: HttpRequest
         :return: render
         """
+
+        if request.user.profile.is_student:
+            raise PermissionDenied()
 
         all_users = User.objects.filter(profile__is_student=True)
         self.context['all_users'] = all_users
