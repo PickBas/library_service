@@ -116,6 +116,7 @@ class ProfileEditTest(TestCase):
 
     def setUp(self) -> None:
         """Setting up ProfileEditTest"""
+
         super().setUp()
         self.client = Client()
         self.current_user = User.objects.get(username='FirstUserTestStudent')
@@ -183,3 +184,37 @@ class ProfileEditTest(TestCase):
         })
 
         self.assertEqual(response.status_code, 302)
+
+
+class ProfileMainPageTestCase(TestCase):
+    """ProfileMainPageTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up ProfileEditTest"""
+
+        super().setUp()
+        self.client = Client()
+
+    def test_student_profile_page_loads(self) -> None:
+        """Testing if the student's profile main page loads"""
+
+        self.current_user = User.objects.get(username='FirstUserTestStudent')
+        self.client.force_login(user=self.current_user)
+
+        response = self.client.get(reverse('profile_main_page',
+                                kwargs={'pk': self.current_user.id}))
+
+        self.assertEqual(200, response.status_code)
+
+    def test_librarian_profile_page_loads(self) -> None:
+        """Testing if the librarian's profile main page loads"""
+
+        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.client.force_login(user=self.current_user)
+
+        response = self.client.get(reverse('profile_main_page',
+                                           kwargs={'pk': self.current_user.id}))
+
+        self.assertEqual(200, response.status_code)
