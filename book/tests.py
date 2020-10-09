@@ -1,9 +1,11 @@
 """book tests.py"""
+from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from book.forms import GiveBookForm
 from book.models import Book
 
 
@@ -167,24 +169,36 @@ class GiveBookTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
-        self.client.force_login(user=self.current_user)
-
-    def test_book_giving_page_loads(self) -> None:
-        """Testing page load"""
+        self.current_user_librarian = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user_student = User.objects.get(username='FirstUserTestStudent')
+        self.client.force_login(user=self.current_user_librarian)
 
         data = {
-            'name': 'test2',
+            'name': 'TestBookGivingBook',
             'info': 'info about the book2'
         }
 
         self.client.post(reverse('add_book_to_lib'), data)
+        self.current_book = Book.objects.get(name='TestBookGivingBook')
 
-        current_book = Book.objects.get(name='test2')
+    def test_book_giving_page_loads(self) -> None:
+        """Testing page load"""
 
-        response = self.client.get(reverse('give_book_page', kwargs={'pk': current_book.id}))
+        response = self.client.get(reverse('give_book_page',
+                                           kwargs={'pk': self.current_book.id}))
 
         self.assertEqual(200, response.status_code)
+
+    def test_book_giving_form(self) -> None:
+        """Testing book giving form"""
+
+        data = {
+            'student': self.current_user_student,
+            'date_back': datetime.today().date()
+        }
+
+        form = GiveBookForm(data=data)
+        self.assertTrue(form.is_valid())
 
 
 class UpdateBookTestCase(TestCase):
