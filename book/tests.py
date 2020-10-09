@@ -27,8 +27,49 @@ class LibraryViewTest(TestCase):
         self.assertEqual(200, response.status_code)
 
 
-class BookTest(TestCase):
-    """BookTest class"""
+class BookPageTestCase(TestCase):
+    """BookPageTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        super().setUp()
+
+        self.client = Client()
+        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.client.force_login(user=self.current_user)
+
+        data = {
+            'name': 'testBookPage',
+            'info': 'info about the book'
+        }
+
+        self.client.post(reverse('add_book_to_lib'), data)
+        self.current_book = Book.objects.get(name='testBookPage')
+
+    def test_book_page_loads_librarian(self) -> None:
+        """Testing if book_page loads for a librarian"""
+
+        response = self.client.get(reverse('book_page',
+                                           kwargs={'pk': self.current_book.id}))
+
+        self.assertEqual(200, response.status_code)
+
+    def test_book_page_loads_student(self) -> None:
+        """Testing if book_page loads for a student"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
+
+        response = client.get(reverse('book_page', kwargs={'pk': self.current_book.id}))
+
+        self.assertEqual(200, response.status_code)
+
+
+class UploadBookTestCase(TestCase):
+    """UploadBookTestCase class"""
 
     fixtures = ['test_db.json']
 
@@ -47,8 +88,32 @@ class BookTest(TestCase):
         response = self.client.get(reverse('add_book_to_lib'))
         self.assertEqual(200, response.status_code)
 
+    def test_add_book_page_loads_student(self) -> None:
+        """Testing if add_book_to_lib page loads for students"""
+
+        client = Client()
+        client.force_login(User.objects.get(username='FirstUserTestStudent'))
+
+        response = client.get(reverse('add_book_to_lib'))
+
+        self.assertEqual(403, response.status_code)
+
     def test_book_upload(self) -> None:
         """Testing if it is possible to upload a book"""
+
+        data = {
+            'name': 'test',
+            'info': 'info about the book'
+        }
+
+        client = Client()
+        client.force_login(User.objects.get(username='FirstUserTestStudent'))
+
+        response = client.post(reverse('add_book_to_lib'), data)
+        self.assertEqual(403, response.status_code)
+
+    def test_book_upload_student(self) -> None:
+        """Testing if it is possible to upload a book for a student"""
 
         data = {
             'name': 'test',
