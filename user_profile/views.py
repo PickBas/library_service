@@ -12,7 +12,7 @@ from django.views import View
 
 from book.models import BookInfo
 from core.forms import CropAvatarForm
-from user_profile.forms import UpdateAvatarForm, ProfileUpdateForm, UserUpdateForm
+from user_profile.forms import UpdateAvatarForm, ProfileUpdateForm, UserUpdateForm, DateStatsForm
 
 
 class ProfilePageView(View):
@@ -194,14 +194,23 @@ class LibrarianStatsView(View):
         current_librarian = User.objects.get(id=kwargs['pk'])
         self.context['page_name'] = 'Статистика ' + current_librarian.username
 
+        form = DateStatsForm(request.GET)
+
         if request.user.profile.is_student:
             raise PermissionDenied()
 
-        if request.GET.get(key='date') is None:
+        if request.GET.get(key='since_date') is None:
             self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
         else:
-            self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
+            if request.GET.get(key='since_date') > request.GET.get(key='to_date'):
+                self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
+            else:
+                self.context['books'] = BookInfo.objects.filter(
+                    librarian=current_librarian,
+                    date_giving_book__range=[request.GET.get(key='since_date'),
+                                             request.GET.get(key='to_date')])
 
         self.context['current_librarian'] = current_librarian
+        self.context['form'] = form
 
         return render(request, self.template_name, self.context)

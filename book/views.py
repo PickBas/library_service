@@ -1,5 +1,5 @@
 """book views.py"""
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied

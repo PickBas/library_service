@@ -19,7 +19,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('birth', )
+        fields = ('birth',)
         widgets = {
             'birth': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -103,3 +103,18 @@ class CustomSignupForm(SignupForm):
 
         profile.save()
         return user
+
+
+class DateStatsForm(forms.Form):
+    """DateStatsForm class"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for key in self.fields:
+            self.fields[key].required = False
+
+    since_date = forms.DateTimeField(label='От',
+                                     widget=forms.DateInput(attrs={'type': 'date'}))
+    to_date = forms.DateTimeField(label='До',
+                                  widget=forms.DateInput(attrs={'type': 'date'}))

@@ -1,32 +1,36 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block main %}
-    <h1 class="text-center">Статистика {{ current_librarian }}</h1>
-
-     <div class="row mt-3">
-            <div class="col">
-                <table class="table text-center table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">№</th>
-                            <th scope="col">Название книги</th>
-                            <th scope="col">Ученик</th>
-                            <th scope="col">Дата выдачи</th>
-                            <th scope="col">Срок</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for book in books.all reversed %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td><a href="{% url 'book_page' book.book.id %}">{{ book.book.name }}</a></td>
-                                <td><a href="{% url 'profile_main_page' book.student.id %}">{{ book.student.profile.get_full_name }}</a></td>
-                                <td>{{ book.date_giving_book|date:"d/m/Y" }}</td>
-                                <td>{{ book.date_term }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <h1 class="text-center mt-2 mb-2">Статистика {{ current_librarian }}</h1>
+    <form method="get">
+        {{ form|crispy }}
+        <input class="btn btn-primary btn-block" type="submit" value="Применить">
+    </form>
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table text-center table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Название книги</th>
+                        <th scope="col">Ученик</th>
+                        <th scope="col">Дата выдачи</th>
+                        <th scope="col">На срок</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for book in books.all reversed %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="{% url 'book_page' book.book.id %}">{{ book.book.name }}</a></td>
+                        <td><a href="{% url 'profile_main_page' book.student.id %}">{{ book.student.profile.get_full_name }}</a></td>
+                        <td>{{ book.date_giving_book|date:"m/d/Y" }}</td>
+                        <td>{{ book.date_term }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
+    </div>
 {% endblock %}
