@@ -144,3 +144,5 @@ media/avatars/*
 media/books/*
 !media/avatars/0.jpg
 
+ci_tools/pylint/file.txt
+
