@@ -15,7 +15,7 @@
                 </div>
                 <div class="col text-center">
                     {% if current_user.profile.is_librarian %}
-                        {{ current_user.profile.get_given_books_all_times_info }}
+                        <a href="{% url 'librarian_stats_page' current_user.id %}">{{ current_user.profile.get_given_books_all_times_info }}</a>
                     {% else %}
                         {{ current_user.profile.get_books_in_use_info }}
                     {% endif %}
