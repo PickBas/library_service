@@ -4,7 +4,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.db import models
 
-from book.models import Book
+from book.models import Book, BookInfo
 
 
 class Profile(models.Model):
@@ -86,7 +86,7 @@ class Profile(models.Model):
         :returns: str
         """
 
-        return 'Выдано книг: ' + str(len(self.given_books_all_times.all()))
+        return 'Выдано книг: ' + str(len(BookInfo.objects.filter(librarian=self.user)))
 
     def get_given_books_today(self) -> list:
         """

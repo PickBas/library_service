@@ -3,14 +3,16 @@ from io import BytesIO
 
 from PIL import Image
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.http import HttpRequest, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 
+from book.models import BookInfo
 from core.forms import CropAvatarForm
-from user_profile.forms import UpdateAvatarForm, ProfileUpdateForm, UserUpdateForm
+from user_profile.forms import UpdateAvatarForm, ProfileUpdateForm, UserUpdateForm, DateStatsForm
 
 
 class ProfilePageView(View):
@@ -169,3 +171,46 @@ class AvatarUpdateView(View):
                 self.current_user.profile.save()
 
             return redirect(reverse('profile_main_page', kwargs={'pk': request.user.id}))
+
+
+class LibrarianStatsView(View):
+    """LibrarianStatsView class"""
+
+    def __init__(self, **kwargs: dict):
+        self.template_name = 'library/librarian_stats.html'
+        self.context = {}
+        super().__init__(**kwargs)
+
+    def get(self, request: HttpRequest, **kwargs: dict) -> render:
+        """
+        Processing GET request
+
+        :param request: HttpRequest
+        :param kwargs: pk
+        :returns: render
+        :raises: 403
+        """
+
+        current_librarian = User.objects.get(id=kwargs['pk'])
+        self.context['page_name'] = 'Статистика ' + current_librarian.username
+
+        form = DateStatsForm(request.GET)
+
+        if request.user.profile.is_student:
+            raise PermissionDenied()
+
+        if request.GET.get(key='since_date') is None:
+            self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
+        else:
+            if request.GET.get(key='since_date') > request.GET.get(key='to_date'):
+                self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
+            else:
+                self.context['books'] = BookInfo.objects.filter(
+                    librarian=current_librarian,
+                    date_giving_book__range=[request.GET.get(key='since_date'),
+                                             request.GET.get(key='to_date')])
+
+        self.context['current_librarian'] = current_librarian
+        self.context['form'] = form
+
+        return render(request, self.template_name, self.context)

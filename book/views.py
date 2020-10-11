@@ -1,4 +1,6 @@
 """book views.py"""
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest, Http404
@@ -8,7 +10,7 @@ from django.utils import timezone
 from django.views import View
 
 from book.forms import UploadBookForm, GiveBookForm, EditBookForm
-from book.models import Book
+from book.models import Book, BookInfo
 
 
 class StudentsPageView(View):
@@ -192,7 +194,6 @@ class GiveBookPageView(View):
 
         if book_form.is_valid():
             current_book.when_should_be_back = book_form.cleaned_data.get('date_back')
-
             to_student = User.objects.get(id=book_form.cleaned_data.get('student').id)
 
             if current_book in to_student.profile.books_in_use.all():
@@ -206,6 +207,13 @@ class GiveBookPageView(View):
 
             current_book.in_use_by = to_student
             current_book.save()
+
+            BookInfo.objects.create(
+                book=current_book,
+                librarian=librarian,
+                student=to_student,
+                date_term=(book_form.cleaned_data.get('date_back').day - datetime.today().day)
+            ).save()
 
             if current_book not in librarian.profile.given_books_all_times.all():
                 librarian.profile.given_books_all_times.add(current_book)
