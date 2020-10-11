@@ -13,6 +13,8 @@ urlpatterns = [
          name='book_page'),
     path('book/edit/<int:pk>/', views.EditBookPageView.as_view(),
          name='edit_book_page'),
+    path('book/delete/<int:pk>/', views.DeleteBookView.as_view(),
+         name='delete_book'),
     path('book/give/<int:pk>/', views.GiveBookPageView.as_view(),
          name='give_book_page'),
 ]
