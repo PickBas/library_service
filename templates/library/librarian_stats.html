@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for book in books.all %}
+                        {% for book in books.all reversed %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td><a href="{% url 'book_page' book.book.id %}">{{ book.book.name }}</a></td>
