@@ -7,4 +7,5 @@
         {{ form|crispy }}
         <input class="btn btn-primary btn-block" type="submit" value="Обновить">
     </form>
+    <a class="btn btn-danger btn-block mt-3" href="{% url 'delete_book' current_book.id %}">Удалить</a>
 {% endblock %}

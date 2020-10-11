@@ -272,3 +272,48 @@ class UpdateBookTestCase(TestCase):
                                        kwargs={'pk': self.current_book.id}),
                                data)
         self.assertEqual(404, response.status_code)
+
+
+class DeletionBookTestCase(TestCase):
+    """DeletionBookTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        super().setUp()
+
+        self.client_librarian = Client()
+        self.client_librarian.force_login(
+            user=User.objects.get(username='SecondUserTestLibrarian')
+        )
+
+        self.client_student = Client()
+        self.client_student.force_login(
+            user=User.objects.get(username='FirstUserTestStudent')
+        )
+
+        data = {
+            'name': 'testBookDeletion',
+            'info': 'info about the book'
+        }
+
+        self.client_librarian.post(reverse('add_book_to_lib'), data)
+        self.current_book = Book.objects.get(name='testBookDeletion')
+
+    def test_book_deletion_librarian(self) -> None:
+        """Testing if it's possible to delete a book for a librarian"""
+
+        response = self.client_librarian.get(reverse('delete_book',
+                                                     kwargs={'pk': self.current_book.id}))
+
+        self.assertEqual(302, response.status_code)
+
+    def test_book_deletion_student(self) -> None:
+        """Testing if it's possible to delete a book for a student"""
+
+        response = self.client_student.get(reverse('delete_book',
+                                                   kwargs={'pk': self.current_book.id}))
+
+        self.assertEqual(403, response.status_code)

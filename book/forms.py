@@ -32,7 +32,7 @@ class EditBookForm(forms.ModelForm):
             'info': forms.Textarea(),
         }
         labels = {
-            'name': 'название',
+            'name': 'Название',
             'info': 'Информация о книге',
         }
 

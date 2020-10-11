@@ -275,3 +275,32 @@ class EditBookPageView(View):
             return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
 
         return self.get(request, **kwargs)
+
+
+class DeleteBookView(View):
+    """DeleteBookView class"""
+
+    def __init__(self, **kwargs: dict):
+        self.current_book = None
+        super().__init__(**kwargs)
+
+    def get(self, request: HttpRequest, **kwargs: dict) -> redirect:
+        """
+        Processing GET request. Deleting a book
+
+        :param request: HttpRequest
+        :param kwargs: pk
+        :returns: redirect
+        :raises: 403
+        """
+
+        if not request.user.profile.is_librarian:
+            raise PermissionDenied()
+
+        self.current_book = Book.objects.get(id=kwargs['pk'])
+
+        if self.current_book.in_use_by is not None:
+            raise Http404()
+
+        self.current_book.delete()
+        return redirect(reverse('index_page'))
