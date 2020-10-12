@@ -131,6 +131,10 @@ class BookPageView(View):
                 self.current_book not in from_student.profile.overdue_books.all():
             from_student.profile.overdue_books.add(self.current_book)
 
+        if self.current_book.when_should_be_back >= timezone.now() and \
+                self.current_book in from_student.profile.overdue_books.all():
+            from_student.profile.overdue_books.remove(self.current_book)
+
         from_student.save()
 
         self.current_book.in_use_by = None
