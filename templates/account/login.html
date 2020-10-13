@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block page_name_block %}Login{% endblock %}
+{% block page_name_block %}Вход{% endblock %}
 
 {% block main %}
     {% load crispy_forms_tags %}
-    <h2>Log in</h2>
+    <h2>Вход</h2>
     <small class="text-muted">Нет аккаунта? <a href="{{ signup_url }}">Зарегестрируйся!</a></small>
     <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
         {{ form | crispy }}
-        <input type="submit" value="Log in" class="btn btn-primary">
+        <input type="submit" value="Войти" class="btn btn-primary">
     </form>
 {% endblock %}

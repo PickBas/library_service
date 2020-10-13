@@ -5,7 +5,7 @@
 {% block main %}
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
-        <h4>Регистрация в ПО для библиотек</h4>
+        <h4>Регистрация</h4>
         <hr>
         {{ form | crispy }}
         {% if redirect_field_value %}
