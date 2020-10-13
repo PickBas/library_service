@@ -218,8 +218,8 @@ class LibrarianStatsView(View):
         try:
             datetime.strptime(request.POST.get('since_date'), '%Y-%m-%d')
             datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d')
-        except ValueError:
-            raise Http404()
+        except ValueError as invalid_dates:
+            raise Http404() from invalid_dates
 
         if request.user.profile.is_student:
             raise PermissionDenied()

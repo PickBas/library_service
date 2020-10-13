@@ -3,7 +3,7 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$216000$gyhlv0zzQn73$Al5pYWgKCJHr8zSFAhwr3msIMR6hkqnZviBeLj+iEw4=",
+    "password": "pbkdf2_sha256$216000$5zmTAJGdbFDZ$Ab1w+OXmegu3ZP9OKFQjt7kjy1xr+4u2sFZSSjH/Skg=",
     "last_login": null,
     "is_superuser": false,
     "username": "FirstUserTestStudent",
@@ -12,7 +12,7 @@
     "email": "FirstUserTest@firstusertest.firstusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-10-08T04:58:02.666Z",
+    "date_joined": "2020-10-13T09:36:18.050",
     "groups": [],
     "user_permissions": []
   }
@@ -21,7 +21,7 @@
   "model": "auth.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$216000$cRmIudIWRrZp$BmTCt8TU8AJ4uTJDWbZBFUrjp6njkq7aP8Dr8TU4vuM=",
+    "password": "pbkdf2_sha256$216000$TQFIiasIDaxg$6X1NJjeSF1lu9akYlaANm02BU4DJrXNrmmVS/hjBCWQ=",
     "last_login": null,
     "is_superuser": false,
     "username": "SecondUserTestLibrarian",
@@ -30,7 +30,7 @@
     "email": "SecondUserTest@secondusertest.secondusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-10-08T04:58:02.812Z",
+    "date_joined": "2020-10-13T09:36:18.206",
     "groups": [],
     "user_permissions": []
   }
@@ -53,9 +53,9 @@
     "base_image": "avatars/0.jpg",
     "image": "avatars/0.jpg",
     "birth": null,
-    "overdue_books": [],
     "given_books_all_times": [],
-    "books_in_use": []
+    "books_in_use": [],
+    "overdue_books": []
   }
 },
 {
@@ -68,9 +68,9 @@
     "base_image": "avatars/0.jpg",
     "image": "avatars/0.jpg",
     "birth": null,
-    "overdue_books": [],
     "given_books_all_times": [],
-    "books_in_use": []
+    "books_in_use": [],
+    "overdue_books": []
   }
 }
 ]
