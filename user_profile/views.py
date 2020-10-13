@@ -8,11 +8,12 @@ from django.core.files.base import ContentFile
 from django.http import HttpRequest, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.datetime_safe import datetime
 from django.views import View
 
 from book.models import BookInfo
 from core.forms import CropAvatarForm
-from user_profile.forms import UpdateAvatarForm, ProfileUpdateForm, UserUpdateForm, DateStatsForm
+from user_profile.forms import UpdateAvatarForm, ProfileUpdateForm, UserUpdateForm
 
 
 class ProfilePageView(View):
@@ -192,25 +193,45 @@ class LibrarianStatsView(View):
         """
 
         current_librarian = User.objects.get(id=kwargs['pk'])
-        self.context['page_name'] = 'Статистика ' + current_librarian.username
-
-        form = DateStatsForm(request.GET)
 
         if request.user.profile.is_student:
             raise PermissionDenied()
 
-        if request.GET.get(key='since_date') is None:
-            self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
-        else:
-            if request.GET.get(key='since_date') > request.GET.get(key='to_date'):
-                self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
-            else:
-                self.context['books'] = BookInfo.objects.filter(
-                    librarian=current_librarian,
-                    date_giving_book__range=[request.GET.get(key='since_date'),
-                                             request.GET.get(key='to_date')])
-
+        self.context['page_name'] = 'Статистика ' + current_librarian.username
+        self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
         self.context['current_librarian'] = current_librarian
-        self.context['form'] = form
 
         return render(request, self.template_name, self.context)
+
+    def post(self, request: HttpRequest, **kwargs: dict) -> render:
+        """
+        Processing POST request
+
+        :param request: HttpRequest
+        :param kwargs: pk
+        :returns: render
+        :raises: 403, 404
+        """
+
+        template_name = 'library/librarian_stats_table.html'
+
+        try:
+            datetime.strptime(request.POST.get('since_date'), '%Y-%m-%d')
+            datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d')
+        except ValueError:
+            raise Http404()
+
+        if request.user.profile.is_student:
+            raise PermissionDenied()
+
+        if not request.POST.get('since_date') and not request.POST.get('to_date') or \
+                request.POST.get(key='since_date') > request.POST.get(key='to_date'):
+            raise Http404()
+
+        current_librarian = User.objects.get(id=kwargs['pk'])
+        self.context['books'] = BookInfo.objects.filter(
+            librarian=current_librarian,
+            date_giving_book__range=[request.POST.get(key='since_date'),
+                                     request.POST.get(key='to_date')])
+
+        return render(request, template_name, self.context)
