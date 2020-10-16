@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 
-from book.forms import UploadBookForm, GiveBookForm, EditBookForm
+from book.forms import UploadBookForm, EditBookForm
 from book.models import Book, BookInfo
 
 
@@ -213,7 +213,9 @@ class GiveBookPageView(View):
             book=current_book,
             librarian=librarian,
             student=to_student,
-            date_term=(datetime.strptime(request.POST.get('date_back'), '%Y-%m-%d').day - datetime.today().day)
+            date_term=(datetime.
+                       strptime(request.POST.get('date_back'), '%Y-%m-%d')
+                       .day - datetime.today().day)
         ).save()
 
         if current_book not in librarian.profile.given_books_all_times.all():
