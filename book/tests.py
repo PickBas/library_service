@@ -1,11 +1,9 @@
 """book tests.py"""
-from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from book.forms import GiveBookForm
 from book.models import Book
 
 
@@ -188,17 +186,6 @@ class GiveBookTestCase(TestCase):
                                            kwargs={'pk': self.current_book.id}))
 
         self.assertEqual(200, response.status_code)
-
-    def test_book_giving_form(self) -> None:
-        """Testing book giving form"""
-
-        data = {
-            'student': self.current_user_student,
-            'date_back': datetime.today().date()
-        }
-
-        form = GiveBookForm(data=data)
-        self.assertTrue(form.is_valid())
 
     def test_book_giving(self) -> None:
         """Testing if it's possible to give a book"""
