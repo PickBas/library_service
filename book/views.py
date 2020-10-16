@@ -175,7 +175,6 @@ class GiveBookPageView(View):
 
         self.context['current_book'] = current_book
         self.context['students'] = students
-        self.context['book_form'] = GiveBookForm()
 
         return render(request, self.template_name, self.context)
 
@@ -194,38 +193,34 @@ class GiveBookPageView(View):
 
         current_book = get_object_or_404(Book, id=kwargs['pk'])
         librarian = request.user
-        book_form = GiveBookForm(request.POST)
 
-        if book_form.is_valid():
-            current_book.when_should_be_back = book_form.cleaned_data.get('date_back')
-            to_student = User.objects.get(id=book_form.cleaned_data.get('student').id)
+        current_book.when_should_be_back = request.POST.get('date_back')
+        to_student = User.objects.get(id=request.POST.get('student'))
 
-            if current_book in to_student.profile.books_in_use.all():
-                raise Http404()
+        if current_book in to_student.profile.books_in_use.all():
+            raise Http404()
 
-            to_student.profile.books_in_use.add(current_book)
-            to_student.save()
+        to_student.profile.books_in_use.add(current_book)
+        to_student.save()
 
-            if to_student not in current_book.read_history.all():
-                current_book.read_history.add(to_student)
+        if to_student not in current_book.read_history.all():
+            current_book.read_history.add(to_student)
 
-            current_book.in_use_by = to_student
-            current_book.save()
+        current_book.in_use_by = to_student
+        current_book.save()
 
-            BookInfo.objects.create(
-                book=current_book,
-                librarian=librarian,
-                student=to_student,
-                date_term=(book_form.cleaned_data.get('date_back').day - datetime.today().day)
-            ).save()
+        BookInfo.objects.create(
+            book=current_book,
+            librarian=librarian,
+            student=to_student,
+            date_term=(datetime.strptime(request.POST.get('date_back'), '%Y-%m-%d').day - datetime.today().day)
+        ).save()
 
-            if current_book not in librarian.profile.given_books_all_times.all():
-                librarian.profile.given_books_all_times.add(current_book)
-                librarian.save()
+        if current_book not in librarian.profile.given_books_all_times.all():
+            librarian.profile.given_books_all_times.add(current_book)
+            librarian.save()
 
-            return redirect(reverse('index_page'))
-
-        return self.get(request, **kwargs)
+        return redirect(reverse('index_page'))
 
 
 class EditBookPageView(View):

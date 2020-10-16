@@ -200,6 +200,19 @@ class GiveBookTestCase(TestCase):
         form = GiveBookForm(data=data)
         self.assertTrue(form.is_valid())
 
+    def test_book_giving(self) -> None:
+        """Testing if it's possible to give a book"""
+
+        data = {
+            'student': str(self.current_user_student.id),
+            'date_back': '2021-10-10'
+        }
+
+        response = self.client.post(reverse('give_book_page',
+                                            kwargs={'pk': self.current_book.id}),
+                                    data)
+        self.assertEqual(302, response.status_code)
+
 
 class UpdateBookTestCase(TestCase):
     """UpdateBookTestCase class"""
