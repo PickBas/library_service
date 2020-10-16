@@ -8,8 +8,8 @@
     <input type="date" name="since_date" class="dateinput form-control" id="id-since-date">
     <label for="id-to-date" class="mt-1">До:</label>
     <input type="date" name="to_date" class="dateinput form-control mb-3" id="id-to-date">
-    <script src="{% static 'js/get_stats_lib_with_date.js' %}"></script>
-    <button class="btn btn-primary btn-block" onclick="getStatsByDate(event, '{% url 'librarian_stats_page' current_librarian.id %}')">Применить</button>
+    <script src="{% static 'js/sendPostRequest.js' %}"></script>
+    <button class="btn btn-primary btn-block" id='id-submit-sort-by-date-button'>Применить</button>
     <div class="row mt-3" id="table-stats">
         {% include 'library/librarian_stats_table.html' %}
     </div>
@@ -17,6 +17,35 @@
 
 {% block extra__js %}
     <script>
-        let csr_token = '{{ csrf_token }}';
+        function isValidDate(dateString) {
+            let regEx = /^\d{4}-\d{2}-\d{2}$/;
+            if(!dateString.match(regEx)) return false;
+            let d = new Date(dateString);
+            let dNum = d.getTime();
+            if(!dNum && dNum !== 0) return false;
+            return d.toISOString().slice(0,10) === dateString;
+        }
+
+        let since_date_element = document.getElementById('id-since-date')
+        let to_date_element = document.getElementById('id-to-date')
+        let submit_button = document.getElementById('id-submit-sort-by-date-button')
+
+        submit_button.onclick = function () {
+            if (!isValidDate(since_date_element.value) || !isValidDate(to_date_element.value)) {
+                return
+            }
+            let dataToSend = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                since_date: since_date_element.value,
+                to_date: to_date_element.value,
+            }
+            let toInsertHtml = 'table-stats'
+            sendPostRequest(
+                event,
+                '{% url 'librarian_stats_page' current_librarian.id %}',
+                dataToSend,
+                toInsertHtml
+            )
+        }
     </script>
 {% endblock %}
