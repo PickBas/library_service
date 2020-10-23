@@ -4,17 +4,17 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="bookGivingModalLongTitle">Выписать "{{ current_book.name }}"</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
       </div>
-      <div class="modal-body">
-        <div id="div_id_student" class="form-group">
-            <label for="id_student" class=" requiredField">
-                Ученик<span class="asteriskField">*</span>
-            </label>
-            <select name="student" class="select form-control" id="id-selection-student">
-                {% for student in students %}
+        <div class="modal-body">
+            <div id="div_id_student" class="form-group">
+                <label for="id-selection-student" class=" requiredField">
+                    Ученик<span class="asteriskField">*</span>
+                </label>
+                <select name="student" class="select form-control" id="id-selection-student">
+                    {% for student in students %}
                     <option value="{{ student.id }}">{{ student.profile.get_full_name }}</option>
                 {% endfor %}
             </select>
@@ -27,7 +27,6 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
           <script src="{% static 'js/sendPostRequest.js' %}"></script>
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="id-give-book-push-button">Выписать</button>
       </div>

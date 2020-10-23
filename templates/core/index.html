@@ -3,30 +3,33 @@
 {% block main %}
     <h1 class="text-center">Книги</h1>
     {% if user.profile.is_librarian %}
-        <a class="btn btn-primary" href="{% url 'add_book_to_lib' %}">Добавить книгу</a>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addingBookModalCenter">Добавить книгу</button>
+        {% include 'library/add_book_modal.html' %}
     {% endif %}
-    <div class="row mt-3">
-        <div class="col">
-            <table class="table text-center table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Статус</th>
-                        <th scope="col">Добавлено</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for book in books %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url 'book_page' book.id %}">{{ book.name }}</a></td>
-                            <td>{% if book.in_use_by %}Не доступна{% else %}Доступна{% endif %}</td>
-                            <td>{{ book.upload_time|time:"G:i" }}, {{ book.upload_time|date:"d/m/Y" }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div id="id-table-of-books-index">
+        {% include 'library/table_of_books.html' %}
     </div>
+{% endblock %}
+
+{% block extra__js %}
+    <script>
+        let nameBook = document.getElementById('id-name-book-adding')
+        let infoBook = document.getElementById('id-info-book-adding')
+        let submitButton = document.getElementById('id-add-book-push-button')
+
+        submitButton.onclick = function () {
+            let dataToSend = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                name: nameBook.value,
+                info: infoBook.value,
+            }
+            let toInsertHtml = 'id-table-of-books-index'
+            sendPostRequest(
+                event,
+                '{% url 'add_book_post' %}',
+                dataToSend,
+                toInsertHtml
+            )
+        }
+    </script>
 {% endblock %}

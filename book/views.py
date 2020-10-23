@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views import View
 
-from book.forms import UploadBookForm, EditBookForm
+from book.forms import EditBookForm
 from book.models import Book, BookInfo
 
 
@@ -38,52 +38,49 @@ class StudentsPageView(View):
         return render(request, self.template_name, self.context)
 
 
-class AddBookPageView(View):
-    """AddBookPageView class"""
+class AddBookView(View):
+    """AddBookView class"""
 
     def __init__(self, **kwargs: dict):
-        self.template_name = 'library/add_book_to_lib.html'
-        self.context = {'page_name': 'Добавление книги'}
+        self.template_name = 'library/table_of_books.html'
+        self.name = ''
+        self.info = ''
+        self.context = {}
         super().__init__(**kwargs)
 
-    def get(self, request: HttpRequest) -> render:
-        """
-        Processing GET request
-
-        :param request: HttpRequest
-        :returns: render
-        :raises: 403
-        """
-
-        if not request.user.profile.is_librarian:
-            raise PermissionDenied()
-
-        self.context['form'] = UploadBookForm()
-
-        return render(request, self.template_name, self.context)
-
-    def post(self, request: HttpRequest):
+    def post(self, request: HttpRequest) -> render:
         """
         Processing POST request
 
         :param request: HttpRequest
         :returns: redirect
-        :raises: 403
+        :raises: 403, 404
+        """
+
+        self.name = request.POST.get('name')
+        self.info = request.POST.get('info')
+
+        self.validate_request(request)
+
+        Book(in_use_by=None,
+             name=request.POST.get('name'),
+             info=request.POST.get('name')).save()
+
+        self.context['books'] = Book.objects.all()
+        self.context['page_name'] = 'Список книг'
+
+        return render(request, self.template_name, self.context)
+
+    def validate_request(self, request: HttpRequest):
+        """
+        Validating POST request
+        :param request: HttpRequest
         """
 
         if not request.user.profile.is_librarian:
             raise PermissionDenied()
-
-        book_form = UploadBookForm(request.POST)
-
-        if book_form.is_valid():
-            book = Book(in_use_by=None,
-                        name=book_form.cleaned_data.get('name'),
-                        info=book_form.cleaned_data.get('info'))
-            book.save()
-            return redirect(reverse('index_page'))
-
-        return self.get(request)
+        if not self.name or not self.info:
+            raise Http404()
 
 
 class BookPageView(View):
@@ -150,8 +147,8 @@ class BookPageView(View):
         return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
 
 
-class GiveBookPageView(View):
-    """GiveBookPageView class"""
+class GiveBookView(View):
+    """GiveBookView class"""
 
     def __init__(self, **kwargs: dict):
         self.template_name = 'book/book_main_page_data.html'

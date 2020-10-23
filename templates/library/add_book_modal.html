@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="modal fade" id="addingBookModalCenter" tabindex="-1" role="dialog" aria-labelledby="addingBookCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addingBookModalLongTitle">Добавить книгу</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="id-div-name-book-adding" class="form-group">
+                    <label for="id-name-book-adding" class=" requiredField">
+                        Название
+                    </label>
+                    <input type="text" name="name" maxlength="100" class="textinput textInput form-control" required=""
+                           id="id-name-book-adding">
+                </div>
+                <div id="div_id_info" class="form-group">
+                    <label for="id-info-book-adding" class=" requiredField">
+                        Информация о книге
+                    </label>
+                    <textarea name="info" cols="40" rows="10" maxlength="500" class="textarea form-control" required=""
+                              id="id-info-book-adding"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <script src="{% static 'js/sendPostRequest.js' %}"></script>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="id-add-book-push-button">
+                    Добавить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
