@@ -184,7 +184,7 @@ class GiveBookView(View):
 
         self.current_book.in_use_by = self.student
         self.current_book.save()
-        self.save_book_info(datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d').day)
+        self.save_book_info(datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d'))
 
         if self.current_book not in self.librarian.profile.given_books_all_times.all():
             self.librarian.profile.given_books_all_times.add(self.current_book)
@@ -194,14 +194,14 @@ class GiveBookView(View):
 
         return render(request, self.template_name, self.context)
 
-    def save_book_info(self, date: int):
+    def save_book_info(self, date: datetime):
         """Saving information about book giving"""
 
         BookInfo.objects.create(
             book=self.current_book,
             librarian=self.librarian,
             student=self.student,
-            date_term=(date - datetime.today().day)
+            date_term=(abs((date - datetime.today()).days))
         ).save()
 
     def fill_context(self):
