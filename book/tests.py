@@ -46,7 +46,7 @@ class BookPageTestCase(TestCase):
             'info': 'info about the book'
         }
 
-        self.client.post(reverse('add_book_to_lib'), data)
+        self.client.post(reverse('add_book_post'), data)
         self.current_book = Book.objects.get(name='testBookPage')
 
     def test_book_page_loads_librarian(self) -> None:
@@ -82,22 +82,6 @@ class UploadBookTestCase(TestCase):
         self.current_user = User.objects.get(username='SecondUserTestLibrarian')
         self.client.force_login(user=self.current_user)
 
-    def test_add_book_page_loads(self) -> None:
-        """Testing if add_book_to_lib page loads"""
-
-        response = self.client.get(reverse('add_book_to_lib'))
-        self.assertEqual(200, response.status_code)
-
-    def test_add_book_page_loads_student(self) -> None:
-        """Testing if add_book_to_lib page loads for students"""
-
-        client = Client()
-        client.force_login(User.objects.get(username='FirstUserTestStudent'))
-
-        response = client.get(reverse('add_book_to_lib'))
-
-        self.assertEqual(403, response.status_code)
-
     def test_book_upload(self) -> None:
         """Testing if it is possible to upload a book"""
 
@@ -109,7 +93,7 @@ class UploadBookTestCase(TestCase):
         client = Client()
         client.force_login(User.objects.get(username='FirstUserTestStudent'))
 
-        response = client.post(reverse('add_book_to_lib'), data)
+        response = client.post(reverse('add_book_post'), data)
         self.assertEqual(403, response.status_code)
 
     def test_book_upload_student(self) -> None:
@@ -120,8 +104,8 @@ class UploadBookTestCase(TestCase):
             'info': 'info about the book'
         }
 
-        response = self.client.post(reverse('add_book_to_lib'), data)
-        self.assertEqual(302, response.status_code)
+        response = self.client.post(reverse('add_book_post'), data)
+        self.assertEqual(200, response.status_code)
 
 
 class StudentsListTestCase(TestCase):
@@ -176,29 +160,21 @@ class GiveBookTestCase(TestCase):
             'info': 'info about the book2'
         }
 
-        self.client.post(reverse('add_book_to_lib'), data)
+        self.client.post(reverse('add_book_post'), data)
         self.current_book = Book.objects.get(name='TestBookGivingBook')
-
-    def test_book_giving_page_loads(self) -> None:
-        """Testing page load"""
-
-        response = self.client.get(reverse('give_book_page',
-                                           kwargs={'pk': self.current_book.id}))
-
-        self.assertEqual(200, response.status_code)
 
     def test_book_giving(self) -> None:
         """Testing if it's possible to give a book"""
 
         data = {
-            'student': str(self.current_user_student.id),
-            'date_back': '2021-10-10'
+            'student_id': str(self.current_user_student.id),
+            'to_date': '2021-01-01'
         }
 
-        response = self.client.post(reverse('give_book_page',
+        response = self.client.post(reverse('give_book_post',
                                             kwargs={'pk': self.current_book.id}),
                                     data)
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(200, response.status_code)
 
 
 class UpdateBookTestCase(TestCase):
@@ -220,7 +196,7 @@ class UpdateBookTestCase(TestCase):
             'info': 'info about the book'
         }
 
-        self.client.post(reverse('add_book_to_lib'), data)
+        self.client.post(reverse('add_book_post'), data)
         self.current_book = Book.objects.get(name='testUpdateBook')
 
     def test_update_book_page_loads(self) -> None:
@@ -299,7 +275,7 @@ class DeletionBookTestCase(TestCase):
             'info': 'info about the book'
         }
 
-        self.client_librarian.post(reverse('add_book_to_lib'), data)
+        self.client_librarian.post(reverse('add_book_post'), data)
         self.current_book = Book.objects.get(name='testBookDeletion')
 
     def test_book_deletion_librarian(self) -> None:

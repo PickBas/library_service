@@ -11,7 +11,7 @@ class IndexPageView(View):
 
     def __init__(self, **kwargs: dict):
         self.template_name = 'core/index.html'
-        self.context = {'page_name': 'Main page'}
+        self.context = {'page_name': 'Список книг'}
         super().__init__(**kwargs)
 
     def get(self, request: HttpRequest) -> render:
