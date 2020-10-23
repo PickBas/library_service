@@ -201,7 +201,7 @@ class GiveBookView(View):
             book=self.current_book,
             librarian=self.librarian,
             student=self.student,
-            date_term=( - datetime.today().day)
+            date_term=(date - datetime.today().day)
         ).save()
 
     def fill_context(self):
