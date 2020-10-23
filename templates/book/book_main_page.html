@@ -24,41 +24,31 @@
         </div>
     </div>
 
-    {% if user.profile.is_librarian and not current_book.in_use_by %}
-        <div class="row">
-            <div class="col"><a class="btn btn-primary btn-lg btn-block mt-3" href="{% url 'give_book_page' current_book.id %}">Выписать</a></div>
-            <div class="col"><a class="btn btn-secondary btn-lg btn-block mt-3" href="{% url 'edit_book_page' current_book.id %}">Редактировать</a></div>
-        </div>
-    {% elif user.profile.is_librarian and current_book.in_use_by %}
-        <form method="post" action="{% url 'book_page' current_book.id %}">
-            {% csrf_token %}
-            <input class="btn btn-success btn-lg btn-block mt-3" type="submit" value="Вернуть">
-        </form>
-    {% endif %}
+    <div id="id-book-data">
+        {% include 'book/book_main_page_data.html' %}
+    </div>
 
-    {% if current_book.read_history.all|length != 0 %}
-        <div class="row mt-3">
-            <div class="col">
-                <table class="table text-center table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">№</th>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Просрочил</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for student in current_book.read_history.all %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td><a href="{% url 'profile_main_page' student.id %}">{{ student.profile.get_full_name }}</a></td>
-                                <td>{% if current_book in student.profile.overdue_books.all %}Да{% else %}Нет{% endif %}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% endif %}
+{% endblock %}
 
+{% block extra__js %}
+    <script>
+        let studentSelection = document.getElementById('id-selection-student')
+        let toDateElement = document.getElementById('id-date-back-giving-book')
+        let submitButton = document.getElementById('id-give-book-push-button')
+
+        submitButton.onclick = function () {
+            let dataToSend = {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                student_id: studentSelection.value,
+                to_date: toDateElement.value,
+            }
+            let toInsertHtml = 'id-book-data'
+            sendPostRequest(
+                event,
+                '{% url 'give_book_post' current_book.id %}',
+                dataToSend,
+                toInsertHtml
+            )
+        }
+    </script>
 {% endblock %}

@@ -16,5 +16,5 @@ urlpatterns = [
     path('book/delete/<int:pk>/', views.DeleteBookView.as_view(),
          name='delete_book'),
     path('book/give/<int:pk>/', views.GiveBookPageView.as_view(),
-         name='give_book_page'),
+         name='give_book_post'),
 ]

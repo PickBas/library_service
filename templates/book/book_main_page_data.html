@@ -1,0 +1,38 @@
+{% if user.profile.is_librarian and not current_book.in_use_by %}
+    <div class="row">
+        <div class="col"><button class="btn btn-primary btn-lg btn-block mt-3" data-toggle="modal" data-target="#exampleModalCenter">Выписать</button>
+            {% include 'book/book_giving_modal.html' %}
+        </div>
+        <div class="col"><a class="btn btn-secondary btn-lg btn-block mt-3" href="{% url 'edit_book_page' current_book.id %}">Редактировать</a></div>
+    </div>
+{% elif user.profile.is_librarian and current_book.in_use_by %}
+    <form method="post" action="{% url 'book_page' current_book.id %}">
+        {% csrf_token %}
+        <input class="btn btn-success btn-lg btn-block mt-3" type="submit" value="Вернуть">
+    </form>
+{% endif %}
+
+{% if current_book.read_history.all|length != 0 %}
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table text-center table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Просрочил</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in current_book.read_history.all %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url 'profile_main_page' student.id %}">{{ student.profile.get_full_name }}</a></td>
+                            <td>{% if current_book in student.profile.overdue_books.all %}Да{% else %}Нет{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

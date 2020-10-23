@@ -108,6 +108,7 @@ class BookPageView(View):
 
         self.context['page_name'] = current_book.name
         self.context['current_book'] = current_book
+        self.context['students'] = User.objects.filter(profile__is_student=True)
 
         return render(request, self.template_name, self.context)
 
@@ -153,13 +154,16 @@ class GiveBookPageView(View):
     """GiveBookPageView class"""
 
     def __init__(self, **kwargs: dict):
-        self.template_name = 'library/give_a_book.html'
-        self.context = {'page_name': 'Выписывание книги'}
+        self.template_name = 'book/book_main_page_data.html'
+        self.context = {}
+        self.current_book = None
+        self.librarian = None
+        self.student = None
         super().__init__(**kwargs)
 
-    def get(self, request: HttpRequest, **kwargs: dict) -> render:
+    def post(self, request: HttpRequest, **kwargs: dict) -> render:
         """
-        Processing GET request
+        Processing POST request
 
         :param request: HttpRequest
         :param kwargs: pk
@@ -167,62 +171,63 @@ class GiveBookPageView(View):
         :raises: 403, 404
         """
 
-        if request.user.profile.is_student:
-            raise PermissionDenied()
+        self.current_book = get_object_or_404(Book, id=kwargs['pk'])
+        self.student = get_object_or_404(User, id=request.POST.get('student_id'))
+        self.librarian = request.user
 
-        current_book = get_object_or_404(Book, id=kwargs['pk'])
-        students = User.objects.filter(profile__is_student=True)
 
-        self.context['current_book'] = current_book
-        self.context['students'] = students
+        self.validate_post_request(request)
+
+        self.current_book.when_should_be_back = request.POST.get('to_date')
+        self.student.profile.books_in_use.add(self.current_book)
+        self.student.save()
+
+        if self.student not in self.current_book.read_history.all():
+            self.current_book.read_history.add(self.student)
+
+        self.current_book.in_use_by = self.student
+        self.current_book.save()
+        self.save_book_info(datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d').day)
+
+        if self.current_book not in self.librarian.profile.given_books_all_times.all():
+            self.librarian.profile.given_books_all_times.add(self.current_book)
+            self.librarian.save()
+
+        self.fill_context()
 
         return render(request, self.template_name, self.context)
 
-    def post(self, request: HttpRequest, **kwargs: dict):
+    def save_book_info(self, date: int):
+        """Saving information about book giving"""
+
+        BookInfo.objects.create(
+            book=self.current_book,
+            librarian=self.librarian,
+            student=self.student,
+            date_term=( - datetime.today().day)
+        ).save()
+
+    def fill_context(self):
+        """Filling context"""
+
+        self.context['students'] = User.objects.filter(profile__is_student=True)
+        self.context['page_name'] = self.current_book.name
+        self.context['current_book'] = self.current_book
+
+    def validate_post_request(self, request: HttpRequest):
         """
-        Processing POST request
+        Validating POST request.
 
         :param request: HttpRequest
-        :param kwargs: pk
-        :returns: redirect, render
-        :raises: 403, 404
+        :raises: 404, 403
         """
 
         if request.user.profile.is_student:
             raise PermissionDenied()
-
-        current_book = get_object_or_404(Book, id=kwargs['pk'])
-        librarian = request.user
-
-        current_book.when_should_be_back = request.POST.get('date_back')
-        to_student = User.objects.get(id=request.POST.get('student'))
-
-        if current_book in to_student.profile.books_in_use.all():
+        if self.current_book in self.student.profile.books_in_use.all():
             raise Http404()
-
-        to_student.profile.books_in_use.add(current_book)
-        to_student.save()
-
-        if to_student not in current_book.read_history.all():
-            current_book.read_history.add(to_student)
-
-        current_book.in_use_by = to_student
-        current_book.save()
-
-        BookInfo.objects.create(
-            book=current_book,
-            librarian=librarian,
-            student=to_student,
-            date_term=(datetime.
-                       strptime(request.POST.get('date_back'), '%Y-%m-%d')
-                       .day - datetime.today().day)
-        ).save()
-
-        if current_book not in librarian.profile.given_books_all_times.all():
-            librarian.profile.given_books_all_times.add(current_book)
-            librarian.save()
-
-        return redirect(reverse('index_page'))
+        if datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d') <= datetime.now():
+            raise Http404()
 
 
 class EditBookPageView(View):
