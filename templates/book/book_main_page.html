@@ -4,26 +4,6 @@
 
     <h1 class="text-center mt-3 mb-2">{{ current_book.name }}</h1>
 
-     <div class="card mt-4 mx-auto">
-        <div class="card-body">
-            <div class="row align-items-start">
-                <div class="col text-center">
-                    {% if current_book.in_use_by %}
-                        Читает: {{ current_book.in_use_by }}
-                    {% else %}
-                        Доступна
-                    {% endif %}
-                </div>
-                <div class="col text-center">
-                    {{ current_book.info }}
-                </div>
-                <div class="col text-center">
-                    Кол-во прочитавших: {{ current_book.read_history.all|length }}
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="id-book-data">
         {% include 'book/book_main_page_data.html' %}
     </div>

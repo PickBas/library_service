@@ -1,6 +1,26 @@
+<div class="card mt-4 mx-auto">
+        <div class="card-body">
+            <div class="row align-items-start">
+                <div class="col text-center">
+                    {% if current_book.in_use_by %}
+                        Читает: {{ current_book.in_use_by }}
+                    {% else %}
+                        Доступна
+                    {% endif %}
+                </div>
+                <div class="col text-center">
+                    {{ current_book.info }}
+                </div>
+                <div class="col text-center">
+                    Кол-во прочитавших: {{ current_book.read_history.all|length }}
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% if user.profile.is_librarian and not current_book.in_use_by %}
     <div class="row">
-        <div class="col"><button class="btn btn-primary btn-lg btn-block mt-3" data-toggle="modal" data-target="#exampleModalCenter">Выписать</button>
+        <div class="col"><button class="btn btn-primary btn-lg btn-block mt-3" data-toggle="modal" data-target="#bookGivingModalCenter">Выписать</button>
             {% include 'book/book_giving_modal.html' %}
         </div>
         <div class="col"><a class="btn btn-secondary btn-lg btn-block mt-3" href="{% url 'edit_book_page' current_book.id %}">Редактировать</a></div>
