@@ -74,34 +74,33 @@ class ProfileUpdateView(View):
         Processing POST request
 
         :param request: HttpRequest
-        :param kwargs: dict
         :returns: redirect
         """
 
+        self.current_profile = request.user.profile
         self.previous_birth = request.user.profile.birth
 
         user_form = UserUpdateForm(
             request.POST,
             instance=request.user)
-
-        self.current_profile = request.user.profile
-
-        self.current_profile.show_email = request.POST.get('show_email') is not None
-
         profile_form = ProfileUpdateForm(request.POST,
                                          instance=self.current_profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-
-            if self.current_profile.birth is None:
-                self.current_profile.birth = self.previous_birth
-                self.current_profile.save()
+            self.validate_birth()
 
             return redirect(reverse('profile_main_page', kwargs={'pk': request.user.id}))
 
         return self.get(request)
+
+    def validate_birth(self):
+        """Validating date of birth from ProfileUpdateForm"""
+
+        if self.current_profile.birth is None:
+            self.current_profile.birth = self.previous_birth
+            self.current_profile.save()
 
 
 class AvatarUpdateView(View):
@@ -111,6 +110,12 @@ class AvatarUpdateView(View):
         self.template_name = 'profile/update_avatar.html'
         self.context = {'page_name': 'Смена фото'}
         self.current_user = None
+
+        self.x_axis = 0.0
+        self.y_axis = 0.0
+        self.width = 0.0
+        self.height = 0.0
+
         super().__init__(**kwargs)
 
     def get(self, request: HttpRequest) -> render:
@@ -126,7 +131,7 @@ class AvatarUpdateView(View):
 
         return render(request, self.template_name, self.context)
 
-    def post(self, request: HttpRequest):
+    def post(self, request: HttpRequest) -> redirect:
         """
         Cropping and saving user avatar
 
@@ -137,41 +142,73 @@ class AvatarUpdateView(View):
         avatar_form = UpdateAvatarForm(request.POST, request.FILES,
                                        instance=request.user.profile)
         crop_form = CropAvatarForm(request.POST)
-
         self.current_user = request.user
 
         if crop_form.is_valid() and avatar_form.is_valid():
             avatar_form.save()
-
-            x_axis = float(request.POST.get('x'))
-            y_axis = float(request.POST.get('y'))
-            width = float(request.POST.get('width'))
-            height = float(request.POST.get('height'))
-
-            if request.FILES.get('base_image'):
-                image = Image.open(request.FILES.get('base_image'))
-            else:
-                image = Image.open(self.current_user.profile.base_image)
-
-            cropped_image = image.crop((x_axis, y_axis, width + x_axis, height + y_axis))
-            resized_image = cropped_image.resize((256, 256), Image.ANTIALIAS)
-
-            input_output = BytesIO()
-
-            try:
-                resized_image.save(input_output, 'JPEG', quality=100)
-                self.current_user.profile.image.save('image_{}.jpg'.format(self.current_user.id),
-                                                     ContentFile(input_output.getvalue()),
-                                                     save=False)
-                self.current_user.profile.save()
-            except OSError:
-                resized_image.save(input_output, 'PNG', quality=100)
-                self.current_user.profile.image.save('image_{}.png'.format(self.current_user.id),
-                                                     ContentFile(input_output.getvalue()),
-                                                     save=False)
-                self.current_user.profile.save()
-
+            self.get_size(request)
+            self.save_avatar(self.get_image_resized(self.open_image(request)))
             return redirect(reverse('profile_main_page', kwargs={'pk': request.user.id}))
+
+    def get_image_resized(self, image: Image) -> Image:
+        """
+        Getting image resized
+
+        :param image:
+        :return:
+        """
+
+        cropped_image = image.crop((self.x_axis, self.y_axis,
+                                    self.width + self.x_axis, self.height + self.y_axis))
+        return cropped_image.resize((256, 256), Image.ANTIALIAS)
+
+    def open_image(self, request: HttpRequest) -> Image:
+        """
+        Opening image from request
+
+        :param request: HttpRequest
+        :returns: Image
+        """
+
+        if request.FILES.get('base_image'):
+            image = Image.open(request.FILES.get('base_image'))
+        else:
+            image = Image.open(self.current_user.profile.base_image)
+        return image
+
+    def get_size(self, request: HttpRequest):
+        """
+        Getting size of an image from request
+
+        :param request: HttpRequest
+        """
+
+        self.x_axis = float(request.POST.get('x'))
+        self.y_axis = float(request.POST.get('y'))
+        self.width = float(request.POST.get('width'))
+        self.height = float(request.POST.get('height'))
+
+    def save_avatar(self, resized_image: Image):
+        """
+        Saving avatar
+
+        :param resized_image: Image
+        """
+
+        input_output = BytesIO()
+
+        try:
+            resized_image.save(input_output, 'JPEG', quality=100)
+            self.current_user.profile.image.save('image_{}.jpg'.format(self.current_user.id),
+                                                 ContentFile(input_output.getvalue()),
+                                                 save=False)
+            self.current_user.profile.save()
+        except OSError:
+            resized_image.save(input_output, 'PNG', quality=100)
+            self.current_user.profile.image.save('image_{}.png'.format(self.current_user.id),
+                                                 ContentFile(input_output.getvalue()),
+                                                 save=False)
+            self.current_user.profile.save()
 
 
 class LibrarianStatsView(View):
@@ -180,6 +217,8 @@ class LibrarianStatsView(View):
     def __init__(self, **kwargs: dict):
         self.template_name = 'library/librarian_stats.html'
         self.context = {}
+        self.since_date = datetime
+        self.to_date = datetime
         super().__init__(**kwargs)
 
     def get(self, request: HttpRequest, **kwargs: dict) -> render:
@@ -215,18 +254,10 @@ class LibrarianStatsView(View):
 
         template_name = 'library/librarian_stats_table.html'
 
-        try:
-            datetime.strptime(request.POST.get('since_date'), '%Y-%m-%d')
-            datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d')
-        except ValueError as invalid_dates:
-            raise Http404() from invalid_dates
-
         if request.user.profile.is_student:
             raise PermissionDenied()
 
-        if not request.POST.get('since_date') and not request.POST.get('to_date') or \
-                request.POST.get(key='since_date') > request.POST.get(key='to_date'):
-            raise Http404()
+        self.get_dates_from_request(request)
 
         current_librarian = User.objects.get(id=kwargs['pk'])
         self.context['books'] = BookInfo.objects.filter(
@@ -235,3 +266,20 @@ class LibrarianStatsView(View):
                                      request.POST.get(key='to_date')])
 
         return render(request, template_name, self.context)
+
+    def get_dates_from_request(self, request: HttpRequest):
+        """
+        Getting dates from HttpRequest
+
+        :param request: HttpRequest
+        """
+
+        try:
+            self.since_date = datetime.strptime(request.POST.get('since_date'), '%Y-%m-%d')
+            self.to_date = datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d')
+        except ValueError as invalid_dates:
+            raise Http404() from invalid_dates
+
+        if not self.since_date and not self.to_date or \
+                self.since_date > self.to_date:
+            raise Http404()
