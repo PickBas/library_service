@@ -24,7 +24,3 @@
       python manage.py runserver
       
 Теперь вы можете открыть сайт в браузере, введя *127.0.0.1:8000*
-
-## Git
-* [Установка Git](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/GIT_INSTALLATION.md)
-* [Туториал по Git](https://github.com/2048-IT-Engineers/library_service/blob/master/docs/GIT_TUTORIAL.md)
