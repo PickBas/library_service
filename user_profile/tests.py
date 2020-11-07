@@ -109,6 +109,49 @@ class RegistrationTest(TestCase):
         self.assertNotIn(('/', 302), response.redirect_chain)
 
 
+class PasswordChangingTest(TestCase):
+    """class PasswordChangingTest"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        self.client_student = Client()
+        self.client_librarian = Client()
+
+        self.current_user_student = User.objects.get(username='FirstUserTestStudent')
+        self.current_user_librarian = User.objects.get(username='SecondUserTestLibrarian')
+
+        self.client_student.force_login(user=self.current_user_student)
+        self.client_librarian.force_login(user=self.current_user_librarian)
+
+        super().setUp()
+
+    def test_student_password_update(self) -> None:
+        """Testing if a student can change his password"""
+
+        data = {
+            'oldpassword': 'asdf123!',
+            'password1': 'qwer123!',
+            'password2': 'qwer123!'
+        }
+
+        response = self.client_student.post(reverse("account_change_password"), data)
+        self.assertEqual(302, response.status_code)
+
+        data = {
+            'login': self.current_user_student.username,
+            'password': 'qwer123!',
+            'remember': 'false'
+        }
+
+        response = self.client.post(reverse('account_login'),
+                                    data=data, follow=True)
+        self.assertEqual(200, response.status_code)
+        self.assertIn(('/', 302), response.redirect_chain)
+
+
 class ProfileEditTest(TestCase):
     """class ProfileEditTest"""
 
@@ -204,7 +247,7 @@ class ProfileMainPageTestCase(TestCase):
         self.client.force_login(user=self.current_user)
 
         response = self.client.get(reverse('profile_main_page',
-                                kwargs={'pk': self.current_user.id}))
+                                           kwargs={'pk': self.current_user.id}))
 
         self.assertEqual(200, response.status_code)
 
