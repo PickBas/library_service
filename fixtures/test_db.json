@@ -3,7 +3,7 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$216000$5zmTAJGdbFDZ$Ab1w+OXmegu3ZP9OKFQjt7kjy1xr+4u2sFZSSjH/Skg=",
+    "password": "pbkdf2_sha256$216000$WfmVAmTFTeBV$YtcikW4UVuHSK9Ag88t/3UDw9c/zUhU8krasiHnjOq8=",
     "last_login": null,
     "is_superuser": false,
     "username": "FirstUserTestStudent",
@@ -12,7 +12,7 @@
     "email": "FirstUserTest@firstusertest.firstusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-10-13T09:36:18.050",
+    "date_joined": "2020-11-08T09:20:44.097",
     "groups": [],
     "user_permissions": []
   }
@@ -21,7 +21,7 @@
   "model": "auth.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$216000$TQFIiasIDaxg$6X1NJjeSF1lu9akYlaANm02BU4DJrXNrmmVS/hjBCWQ=",
+    "password": "pbkdf2_sha256$216000$6cKQDTjyQbz2$F5JB8SFKrOXJPsm7EmNW8p/2y7BXgAr0R4S8+aQVZxk=",
     "last_login": null,
     "is_superuser": false,
     "username": "SecondUserTestLibrarian",
@@ -30,17 +30,17 @@
     "email": "SecondUserTest@secondusertest.secondusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-10-13T09:36:18.206",
+    "date_joined": "2020-11-08T09:20:44.255",
     "groups": [],
     "user_permissions": []
   }
 },
 {
   "model": "sites.site",
-  "pk": 1,
+  "pk": 2,
   "fields": {
-    "domain": "example.com",
-    "name": "example.com"
+    "domain": "bookmaster.com",
+    "name": "bookmaster.com"
   }
 },
 {

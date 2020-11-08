@@ -16,6 +16,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         os.system("python manage.py makemigrations")
         os.system("python manage.py migrate")
+        os.system("python manage.py loaddata fixtures/site_fixtures.json")
 
         user_item = User.objects.create_user('FirstUserTestStudent', 'FirstUserTest@FirstUserTest.FirstUserTest', 'asdf123!')
 
