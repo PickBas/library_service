@@ -66,11 +66,11 @@ except FileNotFoundError:
     librarian_key_file.close()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', False) == 'True'
 
 ALLOWED_HOSTS = ['*', '127.0.0.1']
 
-SITE_ID = 1
+SITE_ID = 2
 
 # Application definition
 
@@ -193,8 +193,6 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/accounts/logout/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 FIXTURE_DIRS = [
@@ -202,3 +200,13 @@ FIXTURE_DIRS = [
 ]
 
 ACCOUNT_FORMS = {'signup': 'user_profile.forms.CustomSignupForm'}
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_HOST = 'smtp.mail.ru'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 2525
+    EMAIL_HOST_USER = os.environ.get('email_address')
+    EMAIL_HOST_PASSWORD = os.environ.get('email_password')
+    DEFAULT_FROM_EMAIL = os.environ.get('email_address')
