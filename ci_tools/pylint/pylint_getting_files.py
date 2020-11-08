@@ -115,7 +115,7 @@ class Runner:
 
     def _print_line(self, line):
         """ Print output only with verbose flag. """
-        if self.verbose and 'video_hosting' not in line and 'docs' not in line and line != 'pylint_runner.py' and 'migrations' not in line and 'manage' not in line and 'test' not in line and 'venv' not in line:
+        if self.verbose and 'video_hosting' not in line and 'docs' not in line and line != 'pylint_runner.py' and 'migrations' not in line and 'manage' not in line and 'test' not in line and 'venv' not in line and 'setting' not in line:
             print(line)
 
     def get_files_from_dir(self, current_dir):
