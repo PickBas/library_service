@@ -207,6 +207,6 @@ else:
     EMAIL_HOST = 'smtp.mail.ru'
     EMAIL_USE_TLS = True
     EMAIL_PORT = 2525
-    EMAIL_HOST_USER = 'sayed.kirill@mail.ru'
+    EMAIL_HOST_USER = os.environ.get('email_address')
     EMAIL_HOST_PASSWORD = os.environ.get('email_password')
-    DEFAULT_FROM_EMAIL = 'sayed.kirill@mail.ru'
+    DEFAULT_FROM_EMAIL = os.environ.get('email_address')
