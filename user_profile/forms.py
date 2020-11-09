@@ -77,7 +77,7 @@ class CustomSignupForm(SignupForm):
         self.fields.move_to_end('password2')
         self.fields.move_to_end('invite_key')
 
-    def save(self, request: HttpRequest) -> None:
+    def save(self, request: HttpRequest) -> User:
         """
         Saving new user
 
