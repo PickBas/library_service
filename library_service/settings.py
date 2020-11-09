@@ -187,6 +187,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
 # Login/Logout urls
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
