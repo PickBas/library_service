@@ -195,6 +195,7 @@ LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_URL = '/accounts/logout/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -211,12 +212,12 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AMAZON_SECRET_KEY')
 AWS_S3_BUCKET_NAME = "bookmaster-school-bucket"
 DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_HOST = 'smtp.mail.ru'
-    EMAIL_USE_TLS = True
-    EMAIL_PORT = 2525
-    EMAIL_HOST_USER = os.environ.get('email_address')
-    EMAIL_HOST_PASSWORD = os.environ.get('email_password')
-    DEFAULT_FROM_EMAIL = os.environ.get('email_address')
+# if DEBUG:
+#     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# else:
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = os.environ.get('email_address')
+EMAIL_HOST_PASSWORD = os.environ.get('email_password')
+DEFAULT_FROM_EMAIL = os.environ.get('email_address')
