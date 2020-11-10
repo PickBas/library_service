@@ -55,7 +55,7 @@ class LoginTest(TestCase):
         response = self.client.post(reverse('account_login'),
                                     data=data_to_send, follow=True)
         self.assertEqual(200, response.status_code)
-        self.assertIn(('/', 302), response.redirect_chain)
+        self.assertIn(('/accounts/confirm-email/', 302), response.redirect_chain)
 
 
 class RegistrationTest(TestCase):
@@ -90,7 +90,7 @@ class RegistrationTest(TestCase):
         response = self.client.post(reverse('account_signup'),
                                     data=data_to_send, follow=True)
         self.assertEqual(200, response.status_code)
-        self.assertIn(('/', 302), response.redirect_chain)
+        self.assertIn(('/accounts/confirm-email/', 302), response.redirect_chain)
 
     def test_registering_with_existent_credentials(self) -> None:
         """Testing if
@@ -149,7 +149,7 @@ class PasswordChangingTest(TestCase):
         response = self.client.post(reverse('account_login'),
                                     data=data, follow=True)
         self.assertEqual(200, response.status_code)
-        self.assertIn(('/', 302), response.redirect_chain)
+        self.assertIn(('/accounts/confirm-email/', 302), response.redirect_chain)
 
 
 class ProfileEditTest(TestCase):
