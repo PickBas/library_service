@@ -23,8 +23,3 @@ urlpatterns = [
     path('', include('book.urls')),
     path('accounts/', include('allauth.urls')),
 ]
-
-# if settings.DEBUG:
-#     urlpatterns += staticfiles_urlpatterns() + static(
-#         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-#     )
