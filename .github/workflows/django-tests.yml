@@ -31,3 +31,7 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
+      env:
+        AMAZON_ACCESS_KEY: ${{ secrets.AMAZON_ACCESS_KEY }}
+        AMAZON_SECRET_KEY: ${{ secrets.AMAZON_SECRET_KEY }}
+
