@@ -68,7 +68,7 @@ except FileNotFoundError:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False) == 'True'
 
-ALLOWED_HOSTS = ['*', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 SITE_ID = 2
 
@@ -189,12 +189,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
 # Login/Logout urls
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_URL = '/accounts/logout/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -217,6 +220,6 @@ else:
     EMAIL_HOST = 'smtp.mail.ru'
     EMAIL_USE_TLS = True
     EMAIL_PORT = 2525
-    EMAIL_HOST_USER = os.environ.get('email_address')
-    EMAIL_HOST_PASSWORD = os.environ.get('email_password')
-    DEFAULT_FROM_EMAIL = os.environ.get('email_address')
+    EMAIL_HOST_USER = os.environ.get('EMAIL_ADDRESS')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+    DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_ADDRESS')
