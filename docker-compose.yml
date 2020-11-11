@@ -3,9 +3,19 @@ services:
   web_backend:
     build:
       context: .
-    command: python manage.py runserver 0.0.0.0:8000
     ports:
-      - '8000:8000'
+      - '80:80'
     container_name: library_service
     volumes:
       - './:/code'
+    depends_on:
+      - smtp
+
+  smtp:
+    image: namshi/smtp
+    restart: always
+    ports:
+      - '25:25'
+    volumes:
+      - './:/code'
+    container_name: smtp
