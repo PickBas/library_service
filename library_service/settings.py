@@ -189,7 +189,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Allauth settings
 ACCOUNT_EMAIL_REQUIRED = True
 
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 # Login/Logout urls
 LOGIN_URL = '/accounts/login/'
@@ -207,19 +207,12 @@ FIXTURE_DIRS = [
 
 ACCOUNT_FORMS = {'signup': 'user_profile.forms.CustomSignupForm'}
 
-AWS_REGION = "eu-central-1"
-AWS_S3_ENDPOINT_URL = "https://s3.eu-central-1.amazonaws.com"
-AWS_ACCESS_KEY_ID = os.environ.get('AMAZON_ACCESS_KEY')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AMAZON_SECRET_KEY')
-AWS_S3_BUCKET_NAME = "bookmaster-school-bucket"
-DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
+if not DEBUG:
+    AWS_REGION = "eu-central-1"
+    AWS_S3_ENDPOINT_URL = "https://s3.eu-central-1.amazonaws.com"
+    AWS_ACCESS_KEY_ID = os.environ.get('AMAZON_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AMAZON_SECRET_KEY')
+    AWS_S3_BUCKET_NAME = "bookmaster-school-bucket"
+    DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_HOST = 'smtp.mail.ru'
-    EMAIL_USE_TLS = True
-    EMAIL_PORT = 2525
-    EMAIL_HOST_USER = os.environ.get('EMAIL_ADDRESS')
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-    DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_ADDRESS')
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
