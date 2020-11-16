@@ -7,5 +7,7 @@ services:
     ports:
       - '8000:8000'
     container_name: library_service
+    environment:
+      - DEBUG=True
     volumes:
       - './:/code'
