@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 
+from book.models import Book
 from user_profile.models import Profile
 
 
@@ -16,10 +17,16 @@ class Command(BaseCommand):
                                  is_librarian: bool):
         user_object = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
                                                last_name=lastname)
-        profile_object = Profile(user=user_object, is_librarian=is_librarian)
+        profile_object = Profile(user=user_object, is_librarian=is_librarian, is_student=(not is_librarian))
 
         user_object.save()
         profile_object.save()
+
+    @staticmethod
+    def add_book(name: str):
+        Book(in_use_by=None,
+             name=name,
+             info='info about the book').save()
 
     def handle(self, *args, **options):
         emails_data = ['shang@gmail.com',
@@ -35,15 +42,15 @@ class Command(BaseCommand):
                        'rfisher@msn.com',
                        'dmbkiwi@mac.com']
         names_data = ['Felicia Medrano',
-                    'Pixie Partridge',
-                    'Leslie Benson',
-                    'Cairon Roy',
-                    'Mariana Woodley',
-                    'Harriet Gonzales',
-                    'Doris Boyd',
-                    'Kajol Merrill',
-                    'Sherri Cisneros',
-                    'Debra Smyth']
+                      'Pixie Partridge',
+                      'Leslie Benson',
+                      'Cairon Roy',
+                      'Mariana Woodley',
+                      'Harriet Gonzales',
+                      'Doris Boyd',
+                      'Kajol Merrill',
+                      'Sherri Cisneros',
+                      'Debra Smyth']
         usernames_data = [
             'airplane',
             'instinctive',
@@ -67,3 +74,27 @@ class Command(BaseCommand):
                                           lastname=last_name,
                                           password='asdf123!',
                                           is_librarian=False)
+
+        book_names = [
+            'Отцы и дети',
+            'Дубровский',
+            'Капитанская доска',
+            'Евгений Онегин',
+            'Герой нашего времени',
+            'Война и мир',
+            'На дне',
+            'Гроза',
+            'Преступление и наказание',
+            'Гранатовый браслет',
+            'Горе от ума',
+            'Мцыри',
+            'Ася',
+            'Обломов',
+            'Собачье сердце',
+            'Письма о добром и прекрасном',
+            'Уроки французского',
+            'Человек на часах',
+        ]
+
+        for book_name in book_names:
+            self.add_book(book_name)

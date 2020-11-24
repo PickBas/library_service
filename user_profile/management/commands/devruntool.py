@@ -22,3 +22,5 @@ class Command(BaseCommand):
         user_item2.save()
         profile_item.save()
         user_item.save()
+
+        # admin_password123
