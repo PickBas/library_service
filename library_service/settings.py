@@ -26,8 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = secret_key_generator.generate()
 
 LIBRARIAN_KEY = secret_key_generator.generate(chars='abcdefghijklmnopqrstuvwxyz0123456789',
-                                            len_of_secret_key=10,
-                                            file_name='.librarian_key.txt')
+                                              len_of_secret_key=10,
+                                              file_name='.librarian_key.txt')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False) == 'True'
