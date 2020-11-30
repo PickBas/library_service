@@ -61,13 +61,13 @@ class CustomSignupForm(SignupForm):
                                                     required=True,
                                                     label='Имя',
                                                     widget=forms.TextInput(
-                                                        attrs={'placeholder': 'First name'}
+                                                        attrs={'placeholder': 'Имя'}
                                                     ))
         self.fields['last_name'] = forms.CharField(max_length=50,
                                                    required=True,
                                                    label='Фамилия',
                                                    widget=forms.TextInput(
-                                                       attrs={'placeholder': 'Last name'}
+                                                       attrs={'placeholder': 'Фамилия'}
                                                    ))
         self.fields['username'].label = 'Имя пользователя'
         self.fields['password1'].label = 'Пароль'
