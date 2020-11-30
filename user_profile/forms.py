@@ -56,7 +56,7 @@ class CustomSignupForm(SignupForm):
         super().__init__(*args, **kwargs)
         self.fields['invite_key'] = forms.CharField(max_length=15,
                                                     required=False,
-                                                    label='Секретный ключ')
+                                                    label='Ключ библиотекоря')
         self.fields['first_name'] = forms.CharField(max_length=50,
                                                     required=True,
                                                     label='Имя',
