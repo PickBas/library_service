@@ -98,6 +98,7 @@ class CustomSignupForm(SignupForm):
 
         if invite_key == settings.LIBRARIAN_KEY:
             profile.is_librarian = True
+            user.is_stuff = True
         else:
             profile.is_student = True
 
