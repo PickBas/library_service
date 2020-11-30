@@ -98,3 +98,17 @@ class Command(BaseCommand):
 
         for book_name in book_names:
             self.add_book(book_name)
+
+        self.create_user_with_profile(username='egor2003',
+                                      email='sapozhkov.egor@mail.ru',
+                                      firstname='Егор',
+                                      lastname='Сапожков',
+                                      password='asdf123!',
+                                      is_librarian=True)
+        self.create_user_with_profile(username='cilovik',
+                                      email='couturej@yandex.ru',
+                                      firstname='Роман',
+                                      lastname='Гайдарлы',
+                                      password='asdf123!',
+                                      is_librarian=False)
+
