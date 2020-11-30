@@ -15,7 +15,10 @@ class Command(BaseCommand):
                                  lastname: str,
                                  password: str,
                                  is_librarian: bool):
-        user_object = User.objects.create_user(username=username, email=email, password=password, first_name=firstname,
+        user_object = User.objects.create_user(username=username,
+                                               email=email,
+                                               password=password,
+                                               first_name=firstname,
                                                last_name=lastname)
         profile_object = Profile(user=user_object, is_librarian=is_librarian, is_student=(not is_librarian))
 
@@ -111,4 +114,16 @@ class Command(BaseCommand):
                                       lastname='Гайдарлы',
                                       password='asdf123!',
                                       is_librarian=False)
+        self.create_user_with_profile(username='Andrageddon',
+                                      email='andrei050103@mail.ru',
+                                      firstname='Андрей',
+                                      lastname='Овсепян',
+                                      password='asdf123!',
+                                      is_librarian=True)
+
+        superuser_item = User.objects.create_superuser(username='PickBas', email='sayed.kirill@mail.ru',
+                                                       password='asdf123!', first_name='Кирилл', last_name='Сайед')
+        superuser_item_profile = Profile.objects.create(user=superuser_item)
+        superuser_item.save()
+        superuser_item_profile.save()
 
