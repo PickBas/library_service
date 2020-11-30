@@ -9,6 +9,7 @@ from book.models import Book
 
 LIBRARIAN_USERNAME = 'SecondUserTestLibrarian'
 STUDENT_USERNAME = 'FirstUserTestStudent'
+ADMIN_USERNAME = 'ThirdUserAdmin'
 
 
 class LibraryViewTest(TestCase):
@@ -142,6 +143,48 @@ class StudentsListTestCase(TestCase):
         response = client.get(reverse('all_students_page'))
 
         self.assertEqual(403, response.status_code)
+
+
+class LibrariansListTestCase(TestCase):
+    """LibrariansListTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        super().setUp()
+
+        self.client = Client()
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
+        self.client.force_login(user=self.current_user)
+
+    def test_student_list_page_loads(self) -> None:
+        """Testing if the librarians list page loads"""
+
+        response = self.client.get(reverse('all_librarians_page'))
+
+        self.assertEqual(403, response.status_code)
+
+    def test_student_list_page_loads_for_students(self) -> None:
+        """Testing if the students list page loads"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(username=STUDENT_USERNAME))
+
+        response = client.get(reverse('all_students_page'))
+
+        self.assertEqual(403, response.status_code)
+
+    def test_student_list_page_loads_for_admins(self) -> None:
+        """Testing if the students list page loads"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(username=ADMIN_USERNAME))
+
+        response = client.get(reverse('all_students_page'))
+
+        self.assertEqual(200, response.status_code)
 
 
 class GiveBookTestCase(TestCase):

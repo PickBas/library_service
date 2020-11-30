@@ -29,5 +29,11 @@ class Command(BaseCommand):
         user_item2.save()
         profile_item.save()
         user_item.save()
+
+        superuser_item = User.objects.create_superuser('ThirdUserAdmin', 'ThirdUserAdmin@ThirdUserAdmin.ThirdUserAdmin', 'asdf123!')
+        superuser_item_profile = Profile.objects.create(user=superuser_item)
+        superuser_item.save()
+        superuser_item_profile.save()
+
         os.system(
             "python manage.py dumpdata --indent 2 --exclude=contenttypes --exclude=auth.permission > fixtures/test_db.json")

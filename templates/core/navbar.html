@@ -5,9 +5,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            {% if user.profile.is_librarian %}
+            {% if user.profile.is_librarian or user.is_superuser %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'all_students_page' %}">Ученики</a>
+                </li>
+            {% endif %}
+            {% if user.is_superuser %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'all_librarians_page' %}">Библиотекари</a>
                 </li>
             {% endif %}
         </ul>
