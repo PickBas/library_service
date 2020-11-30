@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 COPY . /code/
 RUN python ./manage.py makemigrations
 RUN python ./manage.py migrate
-CMD python manage.py runserver 127.0.0.1:8000
+RUN python ./manage.py loaddata ./fixtures/site_fixtures.json

@@ -38,6 +38,31 @@ class StudentsPageView(View):
         return render(request, self.template_name, self.context)
 
 
+class LibrariansPageView(View):
+    """LibrariansPageView class"""
+
+    def __init__(self, **kwargs: dict):
+        self.template_name = 'library/librarians.html'
+        self.context = {'page_name': 'Библиотекари'}
+        super().__init__(**kwargs)
+
+    def get(self, request: HttpRequest) -> render:
+        """
+        Processing get request
+
+        :param request: HttpRequest
+        :return: render
+        """
+
+        if not request.user.is_superuser:
+            raise PermissionDenied()
+
+        all_users = User.objects.filter(profile__is_librarian=True)
+        self.context['all_users'] = all_users
+
+        return render(request, self.template_name, self.context)
+
+
 class AddBookView(View):
     """AddBookView class"""
 
@@ -171,7 +196,6 @@ class GiveBookView(View):
         self.current_book = get_object_or_404(Book, id=kwargs['pk'])
         self.student = get_object_or_404(User, id=request.POST.get('student_id'))
         self.librarian = request.user
-
 
         self.validate_post_request(request)
 

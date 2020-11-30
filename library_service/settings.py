@@ -14,6 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.utils.crypto import get_random_string
+from secret_key_generator import secret_key_generator
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,48 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+SECRET_KEY = secret_key_generator.generate()
 
-SECRET_KEY = ''
-
-try:
-    secret_key_file = open('.secret.txt', 'r')
-    secret_tmp = secret_key_file.readline()
-    if len(secret_tmp) == 50:
-        SECRET_KEY = secret_tmp
-        secret_key_file.close()
-    else:
-        secret_key_file.close()
-        os.remove('.secret.txt')
-        raise FileNotFoundError
-except FileNotFoundError:
-    SECRET_KEY = get_random_string(50, CHARS)
-    secret_key_file = open('.secret.txt', 'x')
-    secret_key_file.write(SECRET_KEY)
-    secret_key_file.close()
-
-# e^81bc@z&=j1%dq(%307ye*=81t$osh!@nq+f8)2ek1b*m1)0p
-
-# Invite key generator for librarians and admins
-CHARS_STUFF = 'abcdefghijklmnopqrstuvwxyz0123456789'
-
-LIBRARIAN_KEY = ''
-
-try:
-    librarian_key_file = open('.librarian_key.txt', 'r')
-    key_tmp = librarian_key_file.readline()
-    if len(key_tmp) == 10:
-        LIBRARIAN_KEY = key_tmp
-        librarian_key_file.close()
-    else:
-        librarian_key_file.close()
-        os.remove('.librarian_key.txt')
-        raise FileNotFoundError
-except FileNotFoundError:
-    LIBRARIAN_KEY = get_random_string(10, CHARS_STUFF)
-    librarian_key_file = open('.librarian_key.txt', 'x')
-    librarian_key_file.write(LIBRARIAN_KEY)
-    librarian_key_file.close()
+LIBRARIAN_KEY = secret_key_generator.generate(chars='abcdefghijklmnopqrstuvwxyz0123456789',
+                                              len_of_secret_key=10,
+                                              file_name='.librarian_key.txt')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False) == 'True'

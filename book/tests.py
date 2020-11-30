@@ -1,10 +1,15 @@
 """book tests.py"""
 
 from django.contrib.auth.models import User
+from django.db import models
 from django.test import TestCase, Client
 from django.urls import reverse
 
 from book.models import Book
+
+LIBRARIAN_USERNAME = 'SecondUserTestLibrarian'
+STUDENT_USERNAME = 'FirstUserTestStudent'
+ADMIN_USERNAME = 'ThirdUserAdmin'
 
 
 class LibraryViewTest(TestCase):
@@ -17,7 +22,7 @@ class LibraryViewTest(TestCase):
 
         super().setUp()
         self.client = Client()
-        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
         self.client.force_login(user=self.current_user)
 
     def test_page_loads(self) -> None:
@@ -38,7 +43,7 @@ class BookPageTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
         self.client.force_login(user=self.current_user)
 
         data = {
@@ -61,7 +66,7 @@ class BookPageTestCase(TestCase):
         """Testing if book_page loads for a student"""
 
         client = Client()
-        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
+        client.force_login(user=User.objects.get(username=STUDENT_USERNAME))
 
         response = client.get(reverse('book_page', kwargs={'pk': self.current_book.id}))
 
@@ -79,7 +84,7 @@ class UploadBookTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
         self.client.force_login(user=self.current_user)
 
     def test_book_upload(self) -> None:
@@ -90,11 +95,8 @@ class UploadBookTestCase(TestCase):
             'info': 'info about the book'
         }
 
-        client = Client()
-        client.force_login(User.objects.get(username='FirstUserTestStudent'))
-
-        response = client.post(reverse('add_book_post'), data)
-        self.assertEqual(403, response.status_code)
+        response = self.client.post(reverse('add_book_post'), data)
+        self.assertEqual(200, response.status_code)
 
     def test_book_upload_student(self) -> None:
         """Testing if it is possible to upload a book for a student"""
@@ -104,8 +106,11 @@ class UploadBookTestCase(TestCase):
             'info': 'info about the book'
         }
 
-        response = self.client.post(reverse('add_book_post'), data)
-        self.assertEqual(200, response.status_code)
+        client = Client()
+        client.force_login(User.objects.get(username=STUDENT_USERNAME))
+
+        response = client.post(reverse('add_book_post'), data)
+        self.assertEqual(403, response.status_code)
 
 
 class StudentsListTestCase(TestCase):
@@ -119,7 +124,7 @@ class StudentsListTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
         self.client.force_login(user=self.current_user)
 
     def test_student_list_page_loads(self) -> None:
@@ -133,11 +138,53 @@ class StudentsListTestCase(TestCase):
         """Testing if the students list page loads"""
 
         client = Client()
-        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
+        client.force_login(user=User.objects.get(username=STUDENT_USERNAME))
 
         response = client.get(reverse('all_students_page'))
 
         self.assertEqual(403, response.status_code)
+
+
+class LibrariansListTestCase(TestCase):
+    """LibrariansListTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up the TestCase"""
+
+        super().setUp()
+
+        self.client = Client()
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
+        self.client.force_login(user=self.current_user)
+
+    def test_student_list_page_loads(self) -> None:
+        """Testing if the librarians list page loads"""
+
+        response = self.client.get(reverse('all_librarians_page'))
+
+        self.assertEqual(403, response.status_code)
+
+    def test_student_list_page_loads_for_students(self) -> None:
+        """Testing if the students list page loads"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(username=STUDENT_USERNAME))
+
+        response = client.get(reverse('all_students_page'))
+
+        self.assertEqual(403, response.status_code)
+
+    def test_student_list_page_loads_for_admins(self) -> None:
+        """Testing if the students list page loads"""
+
+        client = Client()
+        client.force_login(user=User.objects.get(username=ADMIN_USERNAME))
+
+        response = client.get(reverse('all_students_page'))
+
+        self.assertEqual(200, response.status_code)
 
 
 class GiveBookTestCase(TestCase):
@@ -151,8 +198,8 @@ class GiveBookTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user_librarian = User.objects.get(username='SecondUserTestLibrarian')
-        self.current_user_student = User.objects.get(username='FirstUserTestStudent')
+        self.current_user_librarian = User.objects.get(username=LIBRARIAN_USERNAME)
+        self.current_user_student = User.objects.get(username=STUDENT_USERNAME)
         self.client.force_login(user=self.current_user_librarian)
 
         data = {
@@ -188,7 +235,7 @@ class UpdateBookTestCase(TestCase):
         super().setUp()
 
         self.client = Client()
-        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
         self.client.force_login(user=self.current_user)
 
         data = {
@@ -210,7 +257,7 @@ class UpdateBookTestCase(TestCase):
         """Testing if edit_book_page raises 404 for students"""
 
         client = Client()
-        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
+        client.force_login(user=User.objects.get(username=STUDENT_USERNAME))
 
         response = client.get(reverse('edit_book_page',
                                       kwargs={'pk': self.current_book.id}))
@@ -237,7 +284,7 @@ class UpdateBookTestCase(TestCase):
         """Testing if it's possible to edit a book for a student"""
 
         client = Client()
-        client.force_login(user=User.objects.get(username='FirstUserTestStudent'))
+        client.force_login(user=User.objects.get(username=STUDENT_USERNAME))
 
         data = {
             'name': 'testUpdateBook',
@@ -262,12 +309,12 @@ class DeletionBookTestCase(TestCase):
 
         self.client_librarian = Client()
         self.client_librarian.force_login(
-            user=User.objects.get(username='SecondUserTestLibrarian')
+            user=User.objects.get(username=LIBRARIAN_USERNAME)
         )
 
         self.client_student = Client()
         self.client_student.force_login(
-            user=User.objects.get(username='FirstUserTestStudent')
+            user=User.objects.get(username=STUDENT_USERNAME)
         )
 
         data = {
@@ -285,6 +332,9 @@ class DeletionBookTestCase(TestCase):
                                                      kwargs={'pk': self.current_book.id}))
 
         self.assertEqual(302, response.status_code)
+
+        with self.assertRaises(models.ObjectDoesNotExist):
+            Book.objects.get(id=self.current_book.id)
 
     def test_book_deletion_student(self) -> None:
         """Testing if it's possible to delete a book for a student"""

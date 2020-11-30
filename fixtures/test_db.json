@@ -3,7 +3,7 @@
   "model": "auth.user",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$216000$WfmVAmTFTeBV$YtcikW4UVuHSK9Ag88t/3UDw9c/zUhU8krasiHnjOq8=",
+    "password": "pbkdf2_sha256$216000$nFIJHr2t9YYi$6YnrcyricRIb+o2v+zFD8K5+xakskd9HoqAgQjKcDnw=",
     "last_login": null,
     "is_superuser": false,
     "username": "FirstUserTestStudent",
@@ -12,7 +12,7 @@
     "email": "FirstUserTest@firstusertest.firstusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-11-08T09:20:44.097",
+    "date_joined": "2020-11-30T20:58:15.802",
     "groups": [],
     "user_permissions": []
   }
@@ -21,7 +21,7 @@
   "model": "auth.user",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$216000$6cKQDTjyQbz2$F5JB8SFKrOXJPsm7EmNW8p/2y7BXgAr0R4S8+aQVZxk=",
+    "password": "pbkdf2_sha256$216000$VaWoA0nqhurG$kFqtmV9/o9VT3Pq8dR1q5Q4eN5NwKHiq47J94LeHkhg=",
     "last_login": null,
     "is_superuser": false,
     "username": "SecondUserTestLibrarian",
@@ -30,7 +30,25 @@
     "email": "SecondUserTest@secondusertest.secondusertest",
     "is_staff": false,
     "is_active": true,
-    "date_joined": "2020-11-08T09:20:44.255",
+    "date_joined": "2020-11-30T20:58:15.973",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$35F3ki3lZQVQ$Rro0lfVWO8o62JDwxtLoI/CGP5cruTXZSBjPTQeQWjk=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "ThirdUserAdmin",
+    "first_name": "",
+    "last_name": "",
+    "email": "ThirdUserAdmin@thirduseradmin.thirduseradmin",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2020-11-30T20:58:16.153",
     "groups": [],
     "user_permissions": []
   }
@@ -65,6 +83,21 @@
     "user": 1,
     "is_librarian": false,
     "is_student": true,
+    "base_image": "avatars/0.jpg",
+    "image": "avatars/0.jpg",
+    "birth": null,
+    "given_books_all_times": [],
+    "books_in_use": [],
+    "overdue_books": []
+  }
+},
+{
+  "model": "user_profile.profile",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "is_librarian": false,
+    "is_student": false,
     "base_image": "avatars/0.jpg",
     "image": "avatars/0.jpg",
     "birth": null,

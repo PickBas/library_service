@@ -10,6 +10,9 @@ from django.urls import reverse
 from library_service.settings import BASE_DIR
 from user_profile.forms import UserUpdateForm, ProfileUpdateForm
 
+LIBRARIAN_USERNAME = 'SecondUserTestLibrarian'
+STUDENT_USERNAME = 'FirstUserTestStudent'
+
 
 class LoginTest(TestCase):
     """LoginTest class"""
@@ -33,7 +36,7 @@ class LoginTest(TestCase):
             it is possible to login with wrong credentials"""
 
         data_to_send = {
-            'login': 'FirstUserTestStudent',
+            'login': STUDENT_USERNAME,
             'password': 'asdf1233!',
             'remember': 'false'
         }
@@ -47,7 +50,7 @@ class LoginTest(TestCase):
             it is possible to login with valid credentials"""
 
         data_to_send = {
-            'login': 'FirstUserTestStudent',
+            'login': STUDENT_USERNAME,
             'password': 'asdf123!',
             'remember': 'false'
         }
@@ -98,7 +101,7 @@ class RegistrationTest(TestCase):
 
         data_to_send = {
             'email': 'FirstUserTest@FirstUserTest.FirstUserTest',
-            'username': 'FirstUserTestStudent',
+            'username': STUDENT_USERNAME,
             'password1': 'asdf123!',
             'password2': 'asdf123!',
         }
@@ -120,8 +123,8 @@ class PasswordChangingTest(TestCase):
         self.client_student = Client()
         self.client_librarian = Client()
 
-        self.current_user_student = User.objects.get(username='FirstUserTestStudent')
-        self.current_user_librarian = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user_student = User.objects.get(username=STUDENT_USERNAME)
+        self.current_user_librarian = User.objects.get(username=LIBRARIAN_USERNAME)
 
         self.client_student.force_login(user=self.current_user_student)
         self.client_librarian.force_login(user=self.current_user_librarian)
@@ -162,7 +165,7 @@ class ProfileEditTest(TestCase):
 
         super().setUp()
         self.client = Client()
-        self.current_user = User.objects.get(username='FirstUserTestStudent')
+        self.current_user = User.objects.get(username=STUDENT_USERNAME)
         self.client.force_login(user=self.current_user)
 
     def test_forms(self) -> None:
@@ -182,6 +185,14 @@ class ProfileEditTest(TestCase):
         profile_update_form = ProfileUpdateForm(f_profile_data, instance=self.current_user.profile)
         self.assertTrue(profile_update_form.is_valid())
 
+    def test_changing_data_page_loads(self) -> None:
+        """Testing if the page loads"""
+
+        response = self.client.get(reverse('update_profile_info'))
+
+        self.assertEqual(200, response.status_code)
+
+
     def test_changing_data(self) -> None:
         """
         Testing if it's possible to change the profile data
@@ -196,8 +207,15 @@ class ProfileEditTest(TestCase):
         })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(User.objects.get(username='FirstUserTestStudent').last_name,
+        self.assertEqual(User.objects.get(username=STUDENT_USERNAME).last_name,
                          form_user_update_data['last_name'])
+
+    def test_avatar_upload_page_loads(self) -> None:
+        """Testing if the page loads"""
+
+        response = self.client.get(reverse('update_profile_avatar'))
+
+        self.assertEqual(200, response.status_code)
 
     def test_avatar_upload(self) -> None:
         """Testing if it's possible to upload an avatar"""
@@ -243,7 +261,7 @@ class ProfileMainPageTestCase(TestCase):
     def test_student_profile_page_loads(self) -> None:
         """Testing if the student's profile main page loads"""
 
-        self.current_user = User.objects.get(username='FirstUserTestStudent')
+        self.current_user = User.objects.get(username=STUDENT_USERNAME)
         self.client.force_login(user=self.current_user)
 
         response = self.client.get(reverse('profile_main_page',
@@ -254,10 +272,48 @@ class ProfileMainPageTestCase(TestCase):
     def test_librarian_profile_page_loads(self) -> None:
         """Testing if the librarian's profile main page loads"""
 
-        self.current_user = User.objects.get(username='SecondUserTestLibrarian')
+        self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
         self.client.force_login(user=self.current_user)
 
         response = self.client.get(reverse('profile_main_page',
                                            kwargs={'pk': self.current_user.id}))
 
         self.assertEqual(200, response.status_code)
+
+
+class LibrarianStatsTestCase(TestCase):
+    """LibrarianStatsTestCase class"""
+
+    fixtures = ['test_db.json']
+
+    def setUp(self) -> None:
+        """Setting up ProfileEditTest"""
+
+        super().setUp()
+
+        self.client_librarian = Client()
+        self.current_librarian = User.objects.get(username=LIBRARIAN_USERNAME)
+        self.client_librarian.force_login(user=self.current_librarian)
+
+        self.client_student = Client()
+        self.client_student.force_login(
+            User.objects.get(username=STUDENT_USERNAME)
+        )
+
+    def test_librarian_stats_page_loads_for_librarian(self) -> None:
+        """Testing if the page loads for librarians"""
+
+        response = self.client_librarian.get(
+            reverse('librarian_stats_page', kwargs={'pk': self.current_librarian.id})
+        )
+
+        self.assertEqual(200, response.status_code)
+
+    def test_librarian_stats_page_loads_for_student(self) -> None:
+        """Testing if the page does not load for students"""
+
+        response = self.client_student.get(
+            reverse('librarian_stats_page', kwargs={'pk': self.current_librarian.id})
+        )
+
+        self.assertEqual(403, response.status_code)
