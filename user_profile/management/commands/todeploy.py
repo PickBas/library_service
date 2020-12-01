@@ -19,7 +19,8 @@ class Command(BaseCommand):
                                                email=email,
                                                password=password,
                                                first_name=firstname,
-                                               last_name=lastname)
+                                               last_name=lastname,
+                                               is_staff=is_librarian)
         profile_object = Profile(user=user_object, is_librarian=is_librarian, is_student=(not is_librarian))
 
         user_object.save()
