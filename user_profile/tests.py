@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from library_service.settings import BASE_DIR
+from library_service.settings import BASE_DIR, LIBRARIAN_KEY
 from user_profile.forms import UserUpdateForm, ProfileUpdateForm
 
 LIBRARIAN_USERNAME = 'SecondUserTestLibrarian'
@@ -94,6 +94,27 @@ class RegistrationTest(TestCase):
                                     data=data_to_send, follow=True)
         self.assertEqual(200, response.status_code)
         self.assertIn(('/', 302), response.redirect_chain)
+
+    def test_registering_librarian(self) -> None:
+        """Testing registration for librarians"""
+
+        data_to_send = {
+            'email': 'test@email.com',
+            'username': 'testLibrarianRegistration',
+            'first_name': 'firstname',
+            'last_name': 'lastname',
+            'password1': 'asdf123!',
+            'password2': 'asdf123!',
+            'invite_key': LIBRARIAN_KEY
+        }
+
+        response = self.client.post(reverse('account_signup'),
+                                    data=data_to_send, follow=True)
+        self.assertEqual(200, response.status_code)
+        self.assertIn(('/', 302), response.redirect_chain)
+
+        librarian_item = User.objects.get(username='testLibrarianRegistration')
+        self.assertTrue(librarian_item.is_staff)
 
     def test_registering_with_existent_credentials(self) -> None:
         """Testing if
@@ -191,7 +212,6 @@ class ProfileEditTest(TestCase):
         response = self.client.get(reverse('update_profile_info'))
 
         self.assertEqual(200, response.status_code)
-
 
     def test_changing_data(self) -> None:
         """
