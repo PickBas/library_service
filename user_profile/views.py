@@ -39,10 +39,26 @@ class ProfilePageView(View):
             raise Http404()
 
         self.current_user = User.objects.get(id=kwargs['pk'])
+        self.check_permission(request_user=request.user)
         self.context['current_user'] = self.current_user
         self.context['page_name'] = self.current_user.username
 
         return render(request, self.template_name, self.context)
+
+    def check_permission(self, request_user: User) -> None:
+        """
+        Check if request user is allowed to see the page
+
+        :param request_user: User
+        """
+
+        if request_user.profile.is_student and request_user != self.current_user:
+            raise PermissionDenied()
+        if self.current_user.profile.is_librarian and request_user.profile.is_librarian\
+                and request_user != self.current_user:
+            raise PermissionDenied()
+        if self.current_user.is_superuser and not request_user.is_superuser:
+            raise PermissionDenied()
 
 
 class ProfileUpdateView(View):
