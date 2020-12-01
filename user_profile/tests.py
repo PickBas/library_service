@@ -9,9 +9,29 @@ from django.urls import reverse
 
 from library_service.settings import BASE_DIR, LIBRARIAN_KEY
 from user_profile.forms import UserUpdateForm, ProfileUpdateForm
+from user_profile.models import Profile
 
 LIBRARIAN_USERNAME = 'SecondUserTestLibrarian'
 STUDENT_USERNAME = 'FirstUserTestStudent'
+
+
+def create_user(username: str, email: str) -> User:
+    """
+    Creating user
+
+    :param username: str
+    :param email: str
+    :returns: User
+    """
+
+    student_different = User.objects.create(username=username,
+                                            email=email,
+                                            password='asdf123!')
+    student_different_profile = Profile(user=student_different, is_student=True)
+    student_different_profile.save()
+    student_different.save()
+
+    return student_different
 
 
 class LoginTest(TestCase):
@@ -276,9 +296,16 @@ class ProfileMainPageTestCase(TestCase):
         """Setting up ProfileEditTest"""
 
         super().setUp()
-        self.client = Client()
+        self.client_student = Client()
+        self.client_librarian = Client()
 
-    def test_student_profile_page_loads(self) -> None:
+        self.current_user_librarian = User.objects.get(username=LIBRARIAN_USERNAME)
+        self.current_user_student = User.objects.get(username=STUDENT_USERNAME)
+
+        self.client_librarian.force_login(user=self.current_user_librarian)
+        self.client_student.force_login(user=self.current_user_student)
+
+    def test_own_student_profile_page_loads(self) -> None:
         """Testing if the student's profile main page loads"""
 
         self.current_user = User.objects.get(username=STUDENT_USERNAME)
@@ -289,7 +316,7 @@ class ProfileMainPageTestCase(TestCase):
 
         self.assertEqual(200, response.status_code)
 
-    def test_librarian_profile_page_loads(self) -> None:
+    def test_own_librarian_profile_page_loads(self) -> None:
         """Testing if the librarian's profile main page loads"""
 
         self.current_user = User.objects.get(username=LIBRARIAN_USERNAME)
@@ -299,6 +326,20 @@ class ProfileMainPageTestCase(TestCase):
                                            kwargs={'pk': self.current_user.id}))
 
         self.assertEqual(200, response.status_code)
+
+    def test_different_student_page_loads_student(self) -> None:
+        """Testing if student is allowed to load different students page"""
+
+        student_different = create_user(username='testDifferentStudentFromStudent',
+                                             email='testDifferentStudentFromStudent@gmail.com')
+
+        client_student_different = Client()
+        client_student_different.force_login(user=student_different)
+        response = client_student_different.get(reverse('profile_main_page',
+                                                        kwargs={'pk': student_different.id}))
+        self.assertEqual(200, response.status_code)
+
+
 
 
 class LibrarianStatsTestCase(TestCase):
