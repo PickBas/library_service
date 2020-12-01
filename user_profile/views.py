@@ -49,16 +49,14 @@ class ProfilePageView(View):
         """
         Check if request user is allowed to see the page
 
-        :param request_user:
+        :param request_user: User
         """
 
         if request_user.profile.is_student and request_user != self.current_user:
             raise PermissionDenied()
-
         if self.current_user.profile.is_librarian and request_user.profile.is_librarian\
                 and request_user != self.current_user:
             raise PermissionDenied()
-
         if self.current_user.is_superuser and not request_user.is_superuser:
             raise PermissionDenied()
 
