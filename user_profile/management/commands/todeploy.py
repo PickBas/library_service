@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 
@@ -25,6 +26,13 @@ class Command(BaseCommand):
 
         user_object.save()
         profile_object.save()
+
+        EmailAddress.objects.create(
+            verified=0,
+            primary=1,
+            user=user_object,
+            email=email
+        ).save()
 
     @staticmethod
     def add_book(name: str):
@@ -127,4 +135,10 @@ class Command(BaseCommand):
         superuser_item_profile = Profile.objects.create(user=superuser_item)
         superuser_item.save()
         superuser_item_profile.save()
+        EmailAddress.objects.create(
+            verified=0,
+            primary=1,
+            user=superuser_item,
+            email='sayed.kirill@mail.ru'
+        ).save()
 
