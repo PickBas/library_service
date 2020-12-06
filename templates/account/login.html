@@ -6,7 +6,7 @@
     {% load crispy_forms_tags %}
     <h2>Вход</h2>
     <small class="text-muted">Нет аккаунта? <a href="{{ signup_url }}">Зарегестрируйся!</a></small>
-    <small class="text-muted d-block"><a href="{% url 'account_reset_password' %}">Забыл пароль?</a></small>
+{#    <small class="text-muted d-block"><a href="{% url 'account_reset_password' %}">Забыл пароль?</a></small>#}
     <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
         {{ form | crispy }}
