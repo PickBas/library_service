@@ -144,7 +144,7 @@ class GiveBookTestCase(AbsTestCase):
 
         data = {
             'student_id': str(self.current_user_student.id),
-            'to_date': '2021-01-01'
+            'to_date': '2029-01-01'
         }
 
         response = self.client_librarian.post(reverse('give_book_post',

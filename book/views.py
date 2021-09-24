@@ -88,8 +88,8 @@ class AddBookView(View):
         self.validate_request(request)
 
         Book(in_use_by=None,
-             name=request.POST.get('name'),
-             info=request.POST.get('name')).save()
+             name=self.name,
+             info=self.info).save()
 
         self.context['books'] = Book.objects.all()
         self.context['page_name'] = 'Список книг'

@@ -95,7 +95,7 @@ class Profile(models.Model):
         :returns: list
         """
 
-        books_given_today = list()
+        books_given_today = []
 
         for book in self.given_books_all_times.all():
             if book.since_given.day == datetime.today().day:
