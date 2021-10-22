@@ -30,7 +30,7 @@ LIBRARIAN_KEY = secret_key_generator.generate(chars='abcdefghijklmnopqrstuvwxyz0
                                               file_name='.librarian_key.txt')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', False) == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
