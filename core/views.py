@@ -21,7 +21,6 @@ class IndexPageView(View):
         :param request: HttpRequest
         :return: render
         """
-
+        
         self.context['books'] = Book.objects.all()
-
         return render(request, self.template_name, self.context)

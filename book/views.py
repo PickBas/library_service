@@ -31,10 +31,8 @@ class StudentsPageView(View):
 
         if request.user.profile.is_student:
             raise PermissionDenied()
-
         all_users = User.objects.filter(profile__is_student=True)
         self.context['all_users'] = all_users
-
         return render(request, self.template_name, self.context)
 
 
@@ -56,10 +54,8 @@ class LibrariansPageView(View):
 
         if not request.user.is_superuser:
             raise PermissionDenied()
-
         all_users = User.objects.filter(profile__is_librarian=True)
         self.context['all_users'] = all_users
-
         return render(request, self.template_name, self.context)
 
 
@@ -84,16 +80,12 @@ class AddBookView(View):
 
         self.name = request.POST.get('name')
         self.info = request.POST.get('info')
-
         self.validate_request(request)
-
         Book(in_use_by=None,
              name=self.name,
              info=self.info).save()
-
         self.context['books'] = Book.objects.all()
         self.context['page_name'] = 'Список книг'
-
         return render(request, self.template_name, self.context)
 
     def validate_request(self, request: HttpRequest):
@@ -127,11 +119,9 @@ class BookPageView(View):
         """
 
         current_book = get_object_or_404(Book, id=kwargs['pk'])
-
         self.context['page_name'] = current_book.name
         self.context['current_book'] = current_book
         self.context['students'] = User.objects.filter(profile__is_student=True)
-
         return render(request, self.template_name, self.context)
 
     def post(self, request: HttpRequest, **kwargs: dict):
@@ -145,30 +135,21 @@ class BookPageView(View):
         """
 
         self.current_book = get_object_or_404(Book, id=kwargs['pk'])
-
         from_student = self.current_book.in_use_by
-
         from_student.profile.books_in_use.remove(self.current_book)
-
         if self.current_book.when_should_be_back < timezone.now() and \
                 self.current_book not in from_student.profile.overdue_books.all():
             from_student.profile.overdue_books.add(self.current_book)
-
         if self.current_book.when_should_be_back >= timezone.now() and \
                 self.current_book in from_student.profile.overdue_books.all():
             from_student.profile.overdue_books.remove(self.current_book)
-
         from_student.save()
-
         self.current_book.in_use_by = None
         self.current_book.when_should_be_back = timezone.now()
         self.current_book.since_back = timezone.now()
-
         if from_student not in self.current_book.read_history.all():
             self.current_book.read_history.add(from_student)
-
         self.current_book.save()
-
         return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
 
 
@@ -196,26 +177,19 @@ class GiveBookView(View):
         self.current_book = get_object_or_404(Book, id=kwargs['pk'])
         self.student = get_object_or_404(User, id=request.POST.get('student_id'))
         self.librarian = request.user
-
         self.validate_post_request(request)
-
         self.current_book.when_should_be_back = request.POST.get('to_date')
         self.student.profile.books_in_use.add(self.current_book)
         self.student.save()
-
         if self.student not in self.current_book.read_history.all():
             self.current_book.read_history.add(self.student)
-
         self.current_book.in_use_by = self.student
         self.current_book.save()
         self.save_book_info(datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d'))
-
         if self.current_book not in self.librarian.profile.given_books_all_times.all():
             self.librarian.profile.given_books_all_times.add(self.current_book)
             self.librarian.save()
-
         self.fill_context()
-
         return render(request, self.template_name, self.context)
 
     def save_book_info(self, date: datetime):
@@ -272,13 +246,10 @@ class EditBookPageView(View):
 
         if not request.user.profile.is_librarian:
             raise Http404()
-
         self.current_book = Book.objects.get(id=kwargs['pk'])
         book_edit_form = EditBookForm(instance=self.current_book)
-
         self.context['current_book'] = self.current_book
         self.context['form'] = book_edit_form
-
         return render(request, self.template_name, self.context)
 
     def post(self, request: HttpRequest, **kwargs: dict):
@@ -293,22 +264,16 @@ class EditBookPageView(View):
 
         if not request.user.profile.is_librarian:
             raise Http404()
-
         self.current_book = Book.objects.get(id=kwargs['pk'])
         book_edit_form = EditBookForm(request.POST, instance=self.current_book)
-
         if book_edit_form.is_valid():
-
             if not len(book_edit_form.cleaned_data.get('name')) > 0 \
                     and not len(book_edit_form.cleaned_data.get('info')) > 0:
                 return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
-
             self.current_book.name = book_edit_form.cleaned_data.get('name')
             self.current_book.info = book_edit_form.cleaned_data.get('info')
-
             self.current_book.save()
             return redirect(reverse('book_page', kwargs={'pk': self.current_book.id}))
-
         return self.get(request, **kwargs)
 
 
@@ -331,11 +296,8 @@ class DeleteBookView(View):
 
         if not request.user.profile.is_librarian:
             raise PermissionDenied()
-
         self.current_book = Book.objects.get(id=kwargs['pk'])
-
         if self.current_book.in_use_by is not None:
             raise Http404()
-
         self.current_book.delete()
         return redirect(reverse('index_page'))

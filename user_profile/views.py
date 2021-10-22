@@ -37,12 +37,10 @@ class ProfilePageView(View):
 
         if not User.objects.filter(id=kwargs['pk']).exists():
             raise Http404()
-
         self.current_user = User.objects.get(id=kwargs['pk'])
         self.check_permission(request_user=request.user)
         self.context['current_user'] = self.current_user
         self.context['page_name'] = self.current_user.username
-
         return render(request, self.template_name, self.context)
 
     def check_permission(self, request_user: User) -> None:
@@ -82,7 +80,6 @@ class ProfileUpdateView(View):
         self.context['user_form'] = UserUpdateForm(instance=request.user)
         self.context['profile_form'] = ProfileUpdateForm(instance=request.user.profile)
         self.previous_birth = request.user.profile.birth
-
         return render(request, self.template_name, self.context)
 
     def post(self, request: HttpRequest) -> redirect:
@@ -95,20 +92,16 @@ class ProfileUpdateView(View):
 
         self.current_profile = request.user.profile
         self.previous_birth = request.user.profile.birth
-
         user_form = UserUpdateForm(
             request.POST,
             instance=request.user)
         profile_form = ProfileUpdateForm(request.POST,
                                          instance=self.current_profile)
-
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
             self.validate_birth()
-
             return redirect(reverse('profile_main_page', kwargs={'pk': request.user.id}))
-
         return self.get(request)
 
     def validate_birth(self):
@@ -126,12 +119,10 @@ class AvatarUpdateView(View):
         self.template_name = 'profile/update_avatar.html'
         self.context = {'page_name': 'Смена фото'}
         self.current_user = None
-
         self.x_axis = 0.0
         self.y_axis = 0.0
         self.width = 0.0
         self.height = 0.0
-
         super().__init__(**kwargs)
 
     def get(self, request: HttpRequest) -> render:
@@ -144,7 +135,6 @@ class AvatarUpdateView(View):
 
         self.context['avatar_form'] = UpdateAvatarForm()
         self.context['crop_form'] = CropAvatarForm()
-
         return render(request, self.template_name, self.context)
 
     def post(self, request: HttpRequest) -> redirect:
@@ -159,7 +149,6 @@ class AvatarUpdateView(View):
                                        instance=request.user.profile)
         crop_form = CropAvatarForm(request.POST)
         self.current_user = request.user
-
         if crop_form.is_valid() and avatar_form.is_valid():
             avatar_form.save()
             self.get_size(request)
@@ -212,7 +201,6 @@ class AvatarUpdateView(View):
         """
 
         input_output = BytesIO()
-
         try:
             resized_image.save(input_output, 'JPEG', quality=100)
             self.current_user.profile.image.save('image_{}.jpg'.format(self.current_user.id),
@@ -248,14 +236,11 @@ class LibrarianStatsView(View):
         """
 
         current_librarian = User.objects.get(id=kwargs['pk'])
-
         if request.user.profile.is_student:
             raise PermissionDenied()
-
         self.context['page_name'] = 'Статистика ' + current_librarian.username
         self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
         self.context['current_librarian'] = current_librarian
-
         return render(request, self.template_name, self.context)
 
     def post(self, request: HttpRequest, **kwargs: dict) -> render:
@@ -269,18 +254,14 @@ class LibrarianStatsView(View):
         """
 
         template_name = 'library/librarian_stats_table.html'
-
         if request.user.profile.is_student:
             raise PermissionDenied()
-
         self.get_dates_from_request(request)
-
         current_librarian = User.objects.get(id=kwargs['pk'])
         self.context['books'] = BookInfo.objects.filter(
             librarian=current_librarian,
             date_giving_book__range=[request.POST.get(key='since_date'),
                                      request.POST.get(key='to_date')])
-
         return render(request, template_name, self.context)
 
     def get_dates_from_request(self, request: HttpRequest):
@@ -295,7 +276,6 @@ class LibrarianStatsView(View):
             self.to_date = datetime.strptime(request.POST.get('to_date'), '%Y-%m-%d')
         except ValueError as invalid_dates:
             raise Http404() from invalid_dates
-
         if not self.since_date and not self.to_date or \
                 self.since_date > self.to_date:
             raise Http404()
