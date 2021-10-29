@@ -131,11 +131,6 @@ dmypy.json
 #idea
 .idea
 
-# secret
-.secret.txt
-.admin_key.txt
-.librarian_key.txt
-
 # media
 media/avatars/*
 media/books/*
