@@ -12,9 +12,8 @@ Open terminal in the project directory, enter the following command:
 Now the app is available on *127.0.0.1:8000*
 ### 2. Using [Python](https://www.python.org/)
 
-      python -m pip install -U pip
       python -m venv ./venv
-      venv/Scripts/activate
+      ./venv/bin/activate or .\venv\Scripts\activate for win
       python -m pip install -U pip
       python -m pip install -r requirements.txt
       python manage.py makemigrations
