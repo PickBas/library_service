@@ -170,4 +170,12 @@ FIXTURE_DIRS = [
 
 ACCOUNT_FORMS = {'signup': 'user_profile.forms.CustomSignupForm'}
 
+if not DEBUG:
+    AWS_REGION = "eu-central-1"
+    AWS_S3_ENDPOINT_URL = "https://s3.eu-central-1.amazonaws.com"
+    AWS_ACCESS_KEY_ID = os.environ.get('AMAZON_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AMAZON_SECRET_KEY')
+    AWS_S3_BUCKET_NAME = "bookmaster-school-bucket"
+    DEFAULT_FILE_STORAGE = "django_s3_storage.storage.S3Storage"
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
