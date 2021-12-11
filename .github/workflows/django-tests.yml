@@ -13,7 +13,7 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 3
       matrix:
         python-version: [ '3.8', '3.9', '3.10' ]
 
@@ -32,9 +32,5 @@ jobs:
       run: |
         python manage.py test
       env:
-        AMAZON_ACCESS_KEY: ${{ secrets.AMAZON_ACCESS_KEY }}
-        AMAZON_SECRET_KEY: ${{ secrets.AMAZON_SECRET_KEY }}
-        EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         DEBUG: True
 
