@@ -30,6 +30,6 @@ jobs:
         python manage.py makemigrations
     - name: Run Tests
       env:
-        DEBUG: True
+        DEBUG: "True"
       run: |
         python manage.py test

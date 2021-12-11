@@ -171,7 +171,6 @@ FIXTURE_DIRS = [
 ACCOUNT_FORMS = {'signup': 'user_profile.forms.CustomSignupForm'}
 
 if not DEBUG:
-    print(DEBUG)
     AWS_REGION = "eu-central-1"
     AWS_S3_ENDPOINT_URL = "https://s3.eu-central-1.amazonaws.com"
     AWS_ACCESS_KEY_ID = os.environ.get('AMAZON_ACCESS_KEY')
