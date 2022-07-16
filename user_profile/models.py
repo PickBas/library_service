@@ -53,10 +53,10 @@ class Profile(models.Model):
         """
 
         if self.user.is_superuser:
-            return 'Администатор'
+            return 'Administrator'
         if self.is_librarian:
-            return 'Библиотекарь'
-        return 'Ученик'
+            return 'Librarian'
+        return 'Student'
 
     def is_overdue_by_id(self, book_id: int) -> bool:
         """
@@ -76,7 +76,7 @@ class Profile(models.Model):
         :returns: str
         """
 
-        return 'Книги: ' + str(len(self.books_in_use.all()))
+        return 'Books: ' + str(len(self.books_in_use.all()))
 
     def get_given_books_all_times_info(self) -> str:
         """
@@ -86,7 +86,7 @@ class Profile(models.Model):
         :returns: str
         """
 
-        return 'Выдано книг: ' + str(len(BookInfo.objects.filter(librarian=self.user)))
+        return 'Books loaned: ' + str(len(BookInfo.objects.filter(librarian=self.user)))
 
     def get_given_books_today(self) -> list:
         """
@@ -96,9 +96,7 @@ class Profile(models.Model):
         """
 
         books_given_today = []
-
         for book in self.given_books_all_times.all():
             if book.since_given.day == datetime.today().day:
                 books_given_today.append(book)
-
         return books_given_today

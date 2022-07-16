@@ -64,7 +64,7 @@ class ProfileUpdateView(View):
 
     def __init__(self, **kwargs: dict):
         self.template_name = 'profile/update_profile.html'
-        self.context = {'page_name': 'Редактирование профиля'}
+        self.context = {'page_name': 'Profile edit'}
         self.current_profile = None
         self.previous_birth = None
         super().__init__(**kwargs)
@@ -117,7 +117,7 @@ class AvatarUpdateView(View):
 
     def __init__(self, **kwargs: dict):
         self.template_name = 'profile/update_avatar.html'
-        self.context = {'page_name': 'Смена фото'}
+        self.context = {'page_name': 'Change photo'}
         self.current_user = None
         self.x_axis = 0.0
         self.y_axis = 0.0
@@ -238,7 +238,7 @@ class LibrarianStatsView(View):
         current_librarian = User.objects.get(id=kwargs['pk'])
         if request.user.profile.is_student:
             raise PermissionDenied()
-        self.context['page_name'] = 'Статистика ' + current_librarian.username
+        self.context['page_name'] = 'Statistics ' + current_librarian.username
         self.context['books'] = BookInfo.objects.filter(librarian=current_librarian)
         self.context['current_librarian'] = current_librarian
         return render(request, self.template_name, self.context)

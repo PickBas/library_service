@@ -24,7 +24,7 @@ class ProfileUpdateForm(forms.ModelForm):
             'birth': forms.DateInput(attrs={'type': 'date'}),
         }
         labels = {
-            'birth': 'Дата рождения',
+            'birth': 'Birthday',
         }
 
 
@@ -35,8 +35,8 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name')
         labels = {
-            'first_name': 'Имя',
-            'last_name': 'Фамилия'
+            'first_name': 'First name',
+            'last_name': 'Last name'
         }
 
 
@@ -56,22 +56,22 @@ class CustomSignupForm(SignupForm):
         super().__init__(*args, **kwargs)
         self.fields['invite_key'] = forms.CharField(max_length=15,
                                                     required=False,
-                                                    label='Ключ библиотекоря')
+                                                    label='Librarian key')
         self.fields['first_name'] = forms.CharField(max_length=50,
                                                     required=True,
                                                     label='Имя',
                                                     widget=forms.TextInput(
-                                                        attrs={'placeholder': 'Имя'}
+                                                        attrs={'placeholder': 'First name'}
                                                     ))
         self.fields['last_name'] = forms.CharField(max_length=50,
                                                    required=True,
                                                    label='Фамилия',
                                                    widget=forms.TextInput(
-                                                       attrs={'placeholder': 'Фамилия'}
+                                                       attrs={'placeholder': 'Last name'}
                                                    ))
-        self.fields['username'].label = 'Имя пользователя'
-        self.fields['password1'].label = 'Пароль'
-        self.fields['password2'].label = 'Пароль (еще раз)'
+        self.fields['username'].label = 'Username'
+        self.fields['password1'].label = 'Password'
+        self.fields['password2'].label = 'password (repeat)'
 
         self.fields.move_to_end('password1')
         self.fields.move_to_end('password2')
